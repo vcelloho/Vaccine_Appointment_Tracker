@@ -96,7 +96,13 @@ def check_status(Trigger_Text, Location, URL):
         return False
     else:
         print(gettime() + " Vaccine may be available")
-        tweet("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+        num_appointments=count_appointments(Location, URL)
+        if(num_appointments==0):
+            print(gettime() + " No Appointments")
+        elif(num_appointments==-1):
+            tweet("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+        else:
+            tweet(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
         
@@ -108,6 +114,24 @@ def catch_false_positive(Location):
             archivehtml(Location, "false positive")
             return True
     return False
+def count_appointments(Location, URL):
+    #URL="https://www.maimmunizations.org/reg/6153100952"
+    #Location="NorthamptonTest"
+    file = open(Location+'.html', 'r')
+    Lines = file.readlines()
+    num_appointments=0
+    if("https://www.maimmunizations.org/reg/" in URL):
+        for i in range(len(Lines)):
+            if ("appointments available" in Lines[i]):
+                try:
+                    num_appointments=num_appointments+int(Lines[i-1])
+                except ValueError:
+                    print("NOTHING")
+                print("Found")
+    else:
+        num_appointments =  -1
+    file.close()
+    return num_appointments
 
 Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
 

@@ -1,0 +1,540 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+<script type="text/javascript" src="https://bam.nr-data.net/1/NRJS-848e62875ff3670501b?a=803428791&amp;v=1198.fe6ec20&amp;to=JgpeEhRfVF4HQx0VFwcJWQVJQFlGC1RcERFKAFQPEg%3D%3D&amp;rst=4779&amp;ck=1&amp;ref=https://registrations.maimmunizations.org/reg/6153100952&amp;qt=19&amp;ap=113&amp;be=801&amp;fe=4567&amp;dc=3357&amp;perf=%7B%22timing%22:%7B%22of%22:1614560275624,%22n%22:0,%22f%22:31,%22dn%22:31,%22dne%22:31,%22c%22:31,%22ce%22:31,%22rq%22:71,%22rp%22:271,%22rpe%22:283,%22dl%22:749,%22di%22:3356,%22ds%22:3356,%22de%22:3487,%22dc%22:4557,%22l%22:4557,%22le%22:4575%7D,%22navigation%22:%7B%7D%7D&amp;fp=4737&amp;fcp=4737&amp;jsonp=NREUM.setToken"></script><script src="https://js-agent.newrelic.com/nr-1198.min.js"></script><script>window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"NRJS-848e62875ff3670501b","applicationID":"803428791","transactionName":"JgpeEhRfVF4HQx0VFwcJWQVJQFlGC1RcERFKAFQPEg==","queueTime":19,"applicationTime":113,"agent":""}</script>
+<script>(window.NREUM||(NREUM={})).loader_config={licenseKey:"NRJS-848e62875ff3670501b",applicationID:"803428791"};window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var i=t[n]={exports:{}};e[n][0].call(i.exports,function(t){var i=e[n][1][t];return r(i||t)},i,i.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var i=0;i&lt;n.length;i++)r(n[i]);return r}({1:[function(e,t,n){function r(){}function i(e,t,n){return function(){return o(e,[u.now()].concat(c(arguments)),t?null:this,n),t?void 0:this}}var o=e("handle"),a=e(6),c=e(7),f=e("ee").get("tracer"),u=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&amp;&amp;(newrelic=s);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],p="api-",l=p+"ixn-";a(d,function(e,t){s[t]=i(p+t,!0,"api")}),s.addPageAction=i(p+"addPageAction",!0),s.setCurrentRouteName=i(p+"routeName",!0),t.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,t){var n={},r=this,i="function"==typeof t;return o(l+"tracer",[u.now(),e,n],r),function(){if(f.emit((i?"":"no-")+"fn-start",[u.now(),r,i],n),i)try{return t.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],n),e}finally{f.emit("fn-end",[u.now()],n)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){m[t]=i(l+t)}),newrelic.noticeError=function(e,t){"string"==typeof e&amp;&amp;(e=new Error(e)),o("err",[e,u.now(),!1,t])}},{}],2:[function(e,t,n){function r(){return c.exists&amp;&amp;performance.now?Math.round(performance.now()):(o=Math.max((new Date).getTime(),o))-a}function i(){return o}var o=(new Date).getTime(),a=o,c=e(8);t.exports=r,t.exports.offset=a,t.exports.getLastTimestamp=i},{}],3:[function(e,t,n){function r(e,t){var n=e.getEntries();n.forEach(function(e){"first-paint"===e.name?d("timing",["fp",Math.floor(e.startTime)]):"first-contentful-paint"===e.name&amp;&amp;d("timing",["fcp",Math.floor(e.startTime)])})}function i(e,t){var n=e.getEntries();n.length&gt;0&amp;&amp;d("lcp",[n[n.length-1]])}function o(e){e.getEntries().forEach(function(e){e.hadRecentInput||d("cls",[e])})}function a(e){if(e instanceof m&amp;&amp;!g){var t=Math.round(e.timeStamp),n={type:e.type};t&lt;=p.now()?n.fid=p.now()-t:t&gt;p.offset&amp;&amp;t&lt;=Date.now()?(t-=p.offset,n.fid=p.now()-t):t=p.now(),g=!0,d("timing",["fi",t,n])}}function c(e){d("pageHide",[p.now(),e])}if(!("init"in NREUM&amp;&amp;"page_view_timing"in NREUM.init&amp;&amp;"enabled"in NREUM.init.page_view_timing&amp;&amp;NREUM.init.page_view_timing.enabled===!1)){var f,u,s,d=e("handle"),p=e("loader"),l=e(5),m=NREUM.o.EV;if("PerformanceObserver"in window&amp;&amp;"function"==typeof window.PerformanceObserver){f=new PerformanceObserver(r);try{f.observe({entryTypes:["paint"]})}catch(v){}u=new PerformanceObserver(i);try{u.observe({entryTypes:["largest-contentful-paint"]})}catch(v){}s=new PerformanceObserver(o);try{s.observe({type:"layout-shift",buffered:!0})}catch(v){}}if("addEventListener"in document){var g=!1,w=["click","keydown","mousedown","pointerdown","touchstart"];w.forEach(function(e){document.addEventListener(e,a,!1)})}l(c)}},{}],4:[function(e,t,n){function r(e,t){if(!i)return!1;if(e!==i)return!1;if(!t)return!0;if(!o)return!1;for(var n=o.split("."),r=t.split("."),a=0;a&lt;r.length;a++)if(r[a]!==n[a])return!1;return!0}var i=null,o=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var c=navigator.userAgent,f=c.match(a);f&amp;&amp;c.indexOf("Chrome")===-1&amp;&amp;c.indexOf("Chromium")===-1&amp;&amp;(i="Safari",o=f[1])}t.exports={agent:i,version:o,match:r}},{}],5:[function(e,t,n){function r(e){function t(){e(a&amp;&amp;document[a]?document[a]:document[i]?"hidden":"visible")}"addEventListener"in document&amp;&amp;o&amp;&amp;document.addEventListener(o,t,!1)}t.exports=r;var i,o,a;"undefined"!=typeof document.hidden?(i="hidden",o="visibilitychange",a="visibilityState"):"undefined"!=typeof document.msHidden?(i="msHidden",o="msvisibilitychange"):"undefined"!=typeof document.webkitHidden&amp;&amp;(i="webkitHidden",o="webkitvisibilitychange",a="webkitVisibilityState")},{}],6:[function(e,t,n){function r(e,t){var n=[],r="",o=0;for(r in e)i.call(e,r)&amp;&amp;(n[o]=t(r,e[r]),o+=1);return n}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],7:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&amp;&amp;(n=e?e.length:0);for(var r=-1,i=n-t||0,o=Array(i&lt;0?0:i);++r&lt;i;)o[r]=e[t+r];return o}t.exports=r},{}],8:[function(e,t,n){t.exports={exists:"undefined"!=typeof window.performance&amp;&amp;window.performance.timing&amp;&amp;"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,t,n){function r(){}function i(e){function t(e){return e&amp;&amp;e instanceof r?e:e?u(e,f,a):a()}function n(n,r,i,o,a){if(a!==!1&amp;&amp;(a=!0),!l.aborted||o){e&amp;&amp;a&amp;&amp;e(n,r,i);for(var c=t(i),f=v(n),u=f.length,s=0;s&lt;u;s++)f[s].apply(c,r);var p=d[h[n]];return p&amp;&amp;p.push([b,n,r,c]),c}}function o(e,t){y[e]=v(e).concat(t)}function m(e,t){var n=y[e];if(n)for(var r=0;r&lt;n.length;r++)n[r]===t&amp;&amp;n.splice(r,1)}function v(e){return y[e]||[]}function g(e){return p[e]=p[e]||i(n)}function w(e,t){s(e,function(e,n){t=t||"feature",h[n]=t,t in d||(d[t]=[])})}var y={},h={},b={on:o,addEventListener:o,removeEventListener:m,emit:n,get:g,listeners:v,context:t,buffer:w,abort:c,aborted:!1};return b}function o(e){return u(e,f,a)}function a(){return new r}function c(){(d.api||d.feature)&amp;&amp;(l.aborted=!0,d=l.backlog={})}var f="nr@context",u=e("gos"),s=e(6),d={},p={},l=t.exports=i();t.exports.getOrSetContext=o,l.backlog=d},{}],gos:[function(e,t,n){function r(e,t,n){if(i.call(e,t))return e[t];var r=n();if(Object.defineProperty&amp;&amp;Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(o){}return e[t]=r,r}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){i.buffer([e],r),i.emit(e,t,n)}var i=e("ee").get("handle");t.exports=r,r.ee=i},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&amp;&amp;"function"!==t?-1:e===window?0:a(e,o,function(){return i++})}var i=1,o="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!x++){var e=b.info=NREUM.info,t=p.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(e&amp;&amp;e.licenseKey&amp;&amp;e.applicationID&amp;&amp;t))return u.abort();f(y,function(t,n){e[t]||(e[t]=n)});var n=a();c("mark",["onload",n+b.offset],null,"api"),c("timing",["load",n]);var r=p.createElement("script");r.src="https://"+e.agent,t.parentNode.insertBefore(r,t)}}function i(){"complete"===p.readyState&amp;&amp;o()}function o(){c("mark",["domContent",a()+b.offset],null,"api")}var a=e(2),c=e("handle"),f=e(6),u=e("ee"),s=e(4),d=window,p=d.document,l="addEventListener",m="attachEvent",v=d.XMLHttpRequest,g=v&amp;&amp;v.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:v,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var w=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1198.min.js"},h=v&amp;&amp;g&amp;&amp;g[l]&amp;&amp;!/CriOS/.test(navigator.userAgent),b=t.exports={offset:a.getLastTimestamp(),now:a,origin:w,features:{},xhrWrappable:h,userAgent:s};e(1),e(3),p[l]?(p[l]("DOMContentLoaded",o,!1),d[l]("load",r,!1)):(p[m]("onreadystatechange",i),d[m]("onload",r)),c("mark",["firstbyte",a.getLastTimestamp()],null,"api");var x=0},{}],"wrap-function":[function(e,t,n){function r(e,t){function n(t,n,r,f,u){function nrWrapper(){var o,a,s,p;try{a=this,o=d(arguments),s="function"==typeof r?r(o,a):r||{}}catch(l){i([l,"",[o,a,f],s],e)}c(n+"start",[o,a,f],s,u);try{return p=t.apply(a,o)}catch(m){throw c(n+"err",[o,a,m],s,u),m}finally{c(n+"end",[o,a,p],s,u)}}return a(t)?t:(n||(n=""),nrWrapper[p]=t,o(t,nrWrapper,e),nrWrapper)}function r(e,t,r,i,o){r||(r="");var c,f,u,s="-"===r.charAt(0);for(u=0;u&lt;t.length;u++)f=t[u],c=e[f],a(c)||(e[f]=n(c,s?f+r:r,i,f,o))}function c(n,r,o,a){if(!m||t){var c=m;m=!0;try{e.emit(n,r,o,t,a)}catch(f){i([f,n,r,o],e)}m=c}}return e||(e=s),n.inPlace=r,n.flag=p,n}function i(e,t){t||(t=s);try{t.emit("internal-error",e)}catch(n){}}function o(e,t,n){if(Object.defineProperty&amp;&amp;Object.keys)try{var r=Object.keys(e);return r.forEach(function(n){Object.defineProperty(t,n,{get:function(){return e[n]},set:function(t){return e[n]=t,t}})}),t}catch(o){i([o],n)}for(var a in e)l.call(e,a)&amp;&amp;(t[a]=e[a]);return t}function a(e){return!(e&amp;&amp;e instanceof Function&amp;&amp;e.apply&amp;&amp;!e[p])}function c(e,t){var n=t(e);return n[p]=e,o(e,n,s),n}function f(e,t,n){var r=e[t];e[t]=c(r,n)}function u(){for(var e=arguments.length,t=new Array(e),n=0;n&lt;e;++n)t[n]=arguments[n];return t}var s=e("ee"),d=e(7),p="nr@original",l=Object.prototype.hasOwnProperty,m=!1;t.exports=r,t.exports.wrapFunction=c,t.exports.wrapInPlace=f,t.exports.argsToArray=u},{}]},{},["loader"]);</script>
+    <title>Massachusetts</title>
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="yG8CrbU3/YnbWpDy/QogJvZYvDz42GUBuKOjWV3FUBY42fVwyx/2FGipmbSFYyitnLGz4jeiKLI659VgXj98Uw==" />
+    
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/css">svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.3333333333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul&gt;li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-both,.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-both,:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}.svg-inline--fa .fa-primary{fill:var(--fa-primary-color,currentColor);opacity:1;opacity:var(--fa-primary-opacity,1)}.svg-inline--fa .fa-secondary{fill:var(--fa-secondary-color,currentColor);opacity:.4;opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-primary{opacity:.4;opacity:var(--fa-secondary-opacity,.4)}.svg-inline--fa.fa-swap-opacity .fa-secondary{opacity:1;opacity:var(--fa-primary-opacity,1)}.svg-inline--fa mask .fa-primary,.svg-inline--fa mask .fa-secondary{fill:#000}.fad.fa-inverse{color:#fff}</style><link rel="stylesheet" media="all" href="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/assets/application-cae9237bbe7f32cd6e9006f6bc93cbccef4c9caff671886105fe81a74af55ac6.css" data-turbolinks-track="reload" />
+    <script src="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/packs/js/application-26d443e354cff04f0ccc.js" data-turbolinks-track="reload"></script><script charset="utf-8" src="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/packs/js/23-7c8e8b040f9de88b3ad4.chunk.js"></script>
+    <link rel="stylesheet" media="screen" href="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/packs/css/application-5b5c3485.css" data-turbolinks-track="reload" />
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+  </head>
+
+  <body data-controller="main">
+    
+    <script>
+//&lt;![CDATA[
+
+      window.I18n = {"errors":{"dob_in_past":"Date of Birth must be in past.","consent_for_adult":"You cannot consent for an adult over 19 years old.","covid_consent_for_adult":"You may not consent for another adult.","covid_consent_for_child":"This child is not eligible for a COVID-19 vaccination.","pfizer_message":"People under 16 years old are not eligible for Covid clinics.","moderna_message":"People under 18 years old are not eligible for Covid clinics.","method_required":"Please select authentication method!","email_required":"You must enter email address for authentication.","phone_number_required":"You must enter email address for authentication.","invalid_email":"You have entered an invalid email address!","invalid_token":"Invalid authentication code. Please try again!","code_required":"Please enter authentication code."},"messages":{"continue":"Thank you for authentication. Please proceed by clicking Save and Continue."},"views":{"registration":{"edit_appointment":{"no_appointment":"No"}}}}
+
+//]]&gt;
+</script>
+    
+    
+
+
+    <div class="main-container">
+        
+        <div class="md:flex flex-auto justify-between items-center mb-4">
+            <div class="flex flex-wrap justify-center items-center mt-2 mb-8 md:mb-2 md:justify-start">
+    <a href="/">
+      <img class="mb-4 md:mb-0 md:mr-2 h-32 logo-prepmod" src="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/assets/prepmod-logo-629fbb91bb5a41199a621bb0e2ed4d5c959702a60d0e9c2597cc09f9e40fff51.png" />
+</a>
+    <img class="ml-2 logo-state " src="https://cw2-massachusetts-production-herokuapp-com.global.ssl.fastly.net/assets/massachusetts-logo-c3e769c3486242ba3fc40f901970dc5330d28ccdeb0f0dcfa65a4d06ba27d8f6.png" />
+</div>
+
+
+          
+  <div class="flex justify-center md:justify-start">
+    <a class="ml-2 mr-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow bg-gray-200" rel="nofollow" data-method="patch" href="/language?locale=en&amp;return_to=https%3A%2F%2Fregistrations.maimmunizations.org%2Freg%2F6153100952">EN</a>
+    <a class="ml-2 mr-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow " rel="nofollow" data-method="patch" href="/language?locale=es&amp;return_to=https%3A%2F%2Fregistrations.maimmunizations.org%2Freg%2F6153100952">ES</a>
+      <a class="ml-2 mr-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow " rel="nofollow" data-method="patch" href="/language?locale=zh&amp;return_to=https%3A%2F%2Fregistrations.maimmunizations.org%2Freg%2F6153100952">ZH</a>
+      <a class="ml-2 mr-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow " rel="nofollow" data-method="patch" href="/language?locale=pt&amp;return_to=https%3A%2F%2Fregistrations.maimmunizations.org%2Freg%2F6153100952">PT</a>
+  </div>
+
+        </div>
+
+      <h1 class="main-title mt-8 md:mt-0">
+  Sign Up for Vaccinations - Northampton Senior Center on 03/02/2021
+</h1>
+
+<div data-controller="consent-form-appointments validations patient-authentication timeout" data-consent-form-appointments-available-appointments-count="1" data-consent-form-appointments-step="appointment" data-timeout-session-active-threshold="1800">
+  <form id="on-boarding-form" data-target="consent-form-appointments.onboardingForm" action="/client/registration?clinic_id=2024&amp;next_step=pre_consent_attestation" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="yG8CrbU3/YnbWpDy/QogJvZYvDz42GUBuKOjWV3FUBY42fVwyx/2FGipmbSFYyitnLGz4jeiKLI659VgXj98Uw==" />
+    <input type="hidden" name="forward" id="forward" />
+    <input type="hidden" name="current_step" id="current_step" value="appointment" />
+    <div class="min-w-full mb-12 hidden md:block">
+      <ul class="multistep-form-progressbar">
+          <li class="active"> Appointment </li>
+          <li class=""> PRE CONSENT ATTESTATION </li>
+          <li class=""> Personal Information </li>
+          <li class=""> Health Insurance </li>
+          <li class=""> Health Questions </li>
+          <li class=""> Add Family </li>
+          <li class=""> Consent For Services </li>
+          <li class=""> Review </li>
+      </ul>
+    </div>
+
+    <div class="min-w-full mb-12 block md:hidden">
+      <ul class="multistep-form-progressbar">
+          <li class="active"> Appointment </li>
+          <li class="">  </li>
+          <li class="">  </li>
+          <li class="">  </li>
+          <li class="">  </li>
+          <li class="">  </li>
+          <li class="">  </li>
+          <li class="">  </li>
+      </ul>
+    </div>
+
+    <p class="text-xl font-semibold mb-4" id="scrollRef">
+  Please select a time for your appointment
+    <span class="text-red-600">(Selected timeslot will be booked for next 15 minutes.)</span>
+</p>
+
+
+<div class="flex appointments-table w-full">
+  <div id="appointments-section" class="md:w-1/2">
+    <div data-target="consent-form-appointments.confirmationModal" class="modal hidden fixed w-full h-full top-0 left-0 flex items-center justify-center">
+  <div class="modal-overlay fixed w-full h-full bg-black opacity-25 top-0 left-0 cursor-pointer"></div>
+  <div class="absolute p-8 bg-white rounded-lg shadow-lg flex w-2/4">
+    <div class="w-full">
+      <p>You are requesting to be placed in the waiting list for clinic which has appointments available. Are you sure?</p>
+      <div class="mt-8 pt-5">
+        <div class="flex justify-end">
+          <span class="inline-flex rounded-md shadow-sm">
+            <a class="button-primary" data-action="click-&gt;consent-form-appointments#submitOnboardingForm">Yes</a>
+          </span>
+          <span class="inline-flex rounded-md shadow-sm">
+            <a data-action="click-&gt;consent-form-appointments#toggleConfirmModal" class="button-primary sm:mr-0 md:mr-0">Cancel</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><table class="table mb-6">
+      <thead>
+        <tr>
+          <th> Time </th>
+          <th> Appointments Available </th>
+        </tr>
+      </thead>
+      <tbody>
+        
+          
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614675600" class="form-radio" disabled="" />
+
+        <span class="ml-2">09:00 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614676800" class="form-radio" disabled="" />
+
+        <span class="ml-2">09:20 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614678000" class="form-radio appointment-radio-btn" required="" />
+
+        <span class="ml-2">09:40 am</span>
+      </td>
+
+      <td>
+        <p>
+          1
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614679200" class="form-radio" disabled="" />
+
+        <span class="ml-2">10:00 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614680400" class="form-radio" disabled="" />
+
+        <span class="ml-2">10:20 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614681600" class="form-radio" disabled="" />
+
+        <span class="ml-2">10:40 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614682800" class="form-radio" disabled="" />
+
+        <span class="ml-2">11:00 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614684000" class="form-radio" disabled="" />
+
+        <span class="ml-2">11:20 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614685200" class="form-radio" disabled="" />
+
+        <span class="ml-2">11:40 am</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614686400" class="form-radio" disabled="" />
+
+        <span class="ml-2">12:00 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614687600" class="form-radio" disabled="" />
+
+        <span class="ml-2">12:20 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614688800" class="form-radio" disabled="" />
+
+        <span class="ml-2">12:40 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614690000" class="form-radio" disabled="" />
+
+        <span class="ml-2">01:00 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614691200" class="form-radio" disabled="" />
+
+        <span class="ml-2">01:20 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614692400" class="form-radio" disabled="" />
+
+        <span class="ml-2">01:40 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614693600" class="form-radio" disabled="" />
+
+        <span class="ml-2">02:00 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614694800" class="form-radio" disabled="" />
+
+        <span class="ml-2">02:20 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614696000" class="form-radio" disabled="" />
+
+        <span class="ml-2">02:40 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614697200" class="form-radio" disabled="" />
+
+        <span class="ml-2">03:00 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614698400" class="form-radio" disabled="" />
+
+        <span class="ml-2">03:20 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+    <tr class="bg-gray-200" data-action="click-&gt;consent-form-appointments#selectRadioBtn" data-parent="">
+      <td class="flex">
+          <input name="appointment[appointment_at_unix]" type="radio" value="1614699600" class="form-radio" disabled="" />
+
+        <span class="ml-2">03:40 pm</span>
+      </td>
+
+      <td>
+        <p>
+          No
+          appointments available
+        </p>
+      </td>
+    </tr>
+
+
+
+        
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<input type="hidden" name="next_step" id="next_step" value="pre_consent_attestation" />
+
+
+
+      <div class="md:flex justify-center items-center mt-6">
+
+            <input type="submit" name="commit" value="Save and Continue →" class="button-action submit-patient appointment " id="submitButton" data-disable-with="Save And Continue" data-action="click-&gt;consent-form-appointments#verifyAge click-&gt;consent-form-appointments#toggleConfirmModal" data-target="" data-pfizer-clinic="true" data-moderna-clinic="false" data-clinic-check-age="false" />
+      </div>
+      <div class="hidden" id="authentication" data-phone="true" data-email="true">
+        <h2 class="font-bold mb-4">Select the authentication preference to verify you identity.</h2>
+        <div class="mb-4">
+          <div class="mb-2 email">
+            <input type="radio" name="preference" id="preference_email" value="email" required="required" data-target="patient-authentication.emailMethod" checked="checked" />
+            <label for="email">I agree to receive email notifications about my appointment.</label>
+          </div>
+          <div class="mb-2 phone">
+            <input type="radio" name="preference" id="preference_phone" value="phone" required="required" data-target="patient-authentication.phoneMethod" />
+            <label for="phone">I agree to text messages notifications about my appointment.</label>
+          </div>
+        </div>
+        <div id="error-container" class="mb-4 mt-4"></div>
+        <div>
+          <button type="button" class="mr-auto button-primary" data-action="click-&gt;patient-authentication#sendAuthCode">Submit</button>
+        </div>
+      </div>
+
+      <div class="hidden" id="verification">
+        <div id="patient-verification">
+          <p class="mb-2">We have sent a code to your phone/email. Please enter that code in the box below:</p>
+
+          <input type="text" name="code" id="code" value="" placeholder="Please enter code" class="form-input width-50" data-target="patient-authentication.authCode" />
+
+          <div id="message" class="mb-4"></div>
+
+          <div class="flex mb-6">
+            <button type="button" class="button-primary" data-action="click-&gt;patient-authentication#sendAuthCode">
+              Resend
+            </button>
+            <button type="button" class="button-primary" data-action="click-&gt;patient-authentication#verifyAuthCode">
+              Verify
+          </button>
+          </div>
+        </div>
+      </div>
+</form>
+  <div id="age-check-modal" class="modal hidden fixed w-full h-full top-0 left-0 flex items-center justify-center">
+  <div class="modal-overlay fixed w-full h-full bg-black opacity-25 top-0 left-0 cursor-pointer"></div>
+  <div class="absolute p-8 bg-white rounded-lg shadow-lg flex w-2/4">
+    <div class="w-full">
+      <div>
+        The vaccine clinic you have selected has a minimum age requirements of  -  and you cannot proceed forward. If you believe you are receiving this message in error, please call 401-222-8022 for further assistance.
+        <div class="mt-8 pt-5">
+          <div class="flex justify-end">
+          <span class="inline-flex rounded-md shadow-sm">
+            <a data-action="click-&gt;consent-form-appointments#closeAgeModal" class="button-primary sm:mr-0 md:mr-0">Exit</a>
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div data-target="timeout.sessionExpiryModal" class="modal hidden fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+    <div class="modal-overlay fixed w-full h-full bg-black opacity-25 top-0 left-0 cursor-pointer"></div>
+    <div class="absolute p-8 bg-white rounded-lg shadow-lg flex w-2/4">
+      <div class="w-full">
+        <p>Your session has been expired.</p>
+        <div class="mt-8 pt-5">
+          <div class="flex justify-end">
+            <span class="inline-flex rounded-md shadow-sm">
+              <a href="/clinic/search" class="button-primary sm:mr-0 md:mr-0">Try again</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+    <div class="pt-32 pb-5 px-6 lg:px-32 bg-white custom-footer_padding">
+  <hr />
+  <p class="text-gray-600 mt-4 text-xs">
+    © 2021 Multi-State Partnership for Prevention.
+    
+  </p>
+</div>
+
+  
+
+</body></html>
