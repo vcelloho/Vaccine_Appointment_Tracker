@@ -117,7 +117,7 @@ def catch_false_positive(Location):
 def count_appointments(Location, URL):
     #URL="https://vaxfinder.mass.gov/locations/"
     #Location="210227094002Greenfield John Zon Center"
-    file = open(Location+'.html', 'r')
+    file = open('/home/pi/'+Location+'.html', 'r')
     Lines = file.readlines()
     num_appointments=0
     if("https://www.maimmunizations.org/reg/" in URL):
