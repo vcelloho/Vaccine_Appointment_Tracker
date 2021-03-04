@@ -116,10 +116,11 @@ def catch_false_positive(Location):
     return False
 def count_appointments(Location, URL):
     #URL="https://vaxfinder.mass.gov/locations/"
-    #Location="210227094002Greenfield John Zon Center"
-    file = open('/home/pi/'+Location+'.html', 'r')
+    #Location="Palmer CVS"
+    file = open('/home/pi/'+Location+'.html', 'r', encoding='utf-8')
     Lines = file.readlines()
     num_appointments=0
+    num_time_slots = 0
     if("https://www.maimmunizations.org/reg/" in URL):
         for i in range(len(Lines)):
             if ("appointments available" in Lines[i]):
@@ -135,7 +136,10 @@ def count_appointments(Location, URL):
                 s_line=s_line.replace('<td class="align-right"><strong>','')
                 s_line=s_line.replace('</strong></td>\n','')
                 num_appointments=num_appointments+int(s_line)
+                num_time_slots += 1
                 print("found")
+        if(num_time_slots == 0 and num_appointments == 0):
+            num_appointments = -1
     else:
         num_appointments =  -1
     file.close()
