@@ -48,7 +48,7 @@ def send(message):
     'sprint':   '@page.nextel.com'
     }
     # Replace the number with your own, or consider using an argument\dict for multiple people.
-    to_number = '5555555555{}'.format(carriers['att'])
+    to_number = settings.PhoneNumber+carriers[settings.Carrier]
     auth = (settings.EmailAddress, settings.EmailPassword)
 
     # Establish a secure session with gmail's outgoing SMTP server using your gmail account
@@ -58,6 +58,16 @@ def send(message):
 
     # Send text message through SMS gateway of destination number
     server.sendmail( auth[0], to_number, message)
+def broadcast(message):
+    if(settings.DevMode):
+        print(message)
+    else:
+        if(settings.Tweet):
+            tweet(message)
+        if(settings.SMS):
+            message=message.replace('https://','')
+            message=message.replace('www.','')
+            send(message)
 def gettime():
     now = datetime.now()
     return(now.strftime("%D %H:%M:%S"))
@@ -77,7 +87,7 @@ def get_website(URL,Location,Check_Type):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
     if(str(requests.get(URL))=="<Response [200]>"):
-        ff = webdriver.Chrome('/usr/bin/chromedriver')
+        ff = webdriver.Chrome(settings.ChromeDriverPath)
         #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
         ff.get(URL)
         if(Check_Type=="CVS"):
@@ -109,14 +119,14 @@ def check_status(Trigger_Text, Location, URL):
         if(num_appointments==0):
             print(gettime() + " No Appointments")
         elif(num_appointments==-1):
-            tweet("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         else:
-            tweet(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
         
 def catch_false_positive(Location):
-    fp_list=pd.read_csv("/mnt/Dioscuri/Not Synced/False_Positive_Checks.csv")
+    fp_list=pd.read_csv(settings.FalsePositiveCSV)
     for index,row in fp_list.iterrows():
         if(check_for_text(row['False_Positives'],Location)):
             print(gettime() + " False Positive " + Location)
@@ -175,7 +185,7 @@ def check_cvs(Site,Location,URL):
             site_list.pop((i-1)*2)
     if(site_list[1]=="Available"):
         print(gettime() + " Vaccine may be available")
-        tweet("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
+        broadcast("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
         pass
@@ -192,10 +202,8 @@ def clean_up():
             os.remove(filePath)
         except OSError:
             print("Error while deleting file")
-Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
-#Vaccine_Site_File="Z:/Not Synced/Vaccine_Sites_dev.csv"
 
-df=pd.read_csv(Vaccine_Site_File)
+df=pd.read_csv(settings.Vaccine_Site_File)
 df['Ignore_Time']=datetime.now()
 
 while True:
