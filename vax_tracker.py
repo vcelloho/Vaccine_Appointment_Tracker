@@ -175,7 +175,7 @@ def check_cvs(Site,Location,URL):
             site_list.pop((i-1)*2)
     if(site_list[1]=="Available"):
         print(gettime() + " Vaccine may be available")
-        tweet("Vaccine may be available at the "+ Location +" CVS\n"+ URL +"\n" + gettime())
+        tweet("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
         pass
@@ -192,8 +192,8 @@ def clean_up():
             os.remove(filePath)
         except OSError:
             print("Error while deleting file")
-#Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
-Vaccine_Site_File="Z:/Not Synced/Vaccine_Sites_dev.csv"
+Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
+#Vaccine_Site_File="Z:/Not Synced/Vaccine_Sites_dev.csv"
 
 df=pd.read_csv(Vaccine_Site_File)
 df['Ignore_Time']=datetime.now()
