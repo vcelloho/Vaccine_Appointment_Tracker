@@ -209,14 +209,16 @@ while True:
                get_website(URL,Location,Check_Type)
             else:
                 print("Already Downloaded")
-            if(not catch_false_positive(Location)):
-                if(Check_Type=="normal"):
-                    if(check_status(Trigger_Text,Location,URL)):
-                        df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
-                elif(Check_Type=="CVS"):
-                    if(check_cvs(Trigger_Text,Location,URL)):
-                        df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
-                    
+            if(path.exists(Location+".html")):
+                if(not catch_false_positive(Location)):
+                    if(Check_Type=="normal"):
+                        if(check_status(Trigger_Text,Location,URL)):
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                    elif(Check_Type=="CVS"):
+                        if(check_cvs(Trigger_Text,Location,URL)):
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+            else:
+                print(Location + " Failed to Download Skipping")
             time.sleep(11+random.uniform(-10,10))
     clean_up()
         
