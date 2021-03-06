@@ -23,6 +23,10 @@ import requests
 import tweepy
 from shutil import copyfile
 import settings
+import os
+import os.path
+from os import path
+import glob
 
 
 
@@ -63,25 +67,30 @@ def getdate():
 
 def archivehtml(Location,arch_type):
     if(arch_type=="false positive"):
-        copyfile('/home/pi/'+Location+'.html', '/mnt/Dioscuri/Not Synced/False Positive Archive/'+getdate() +Location+'.html')
+        copyfile(Location+'.html', 'False Positive Archive/'+getdate() +Location+'.html')
     if(arch_type=="found vaccine"):
-        copyfile('/home/pi/'+Location+'.html', '/mnt/Dioscuri/Not Synced/Vaccine Site Archive/'+getdate() +Location+'.html')
+        copyfile(Location+'.html', 'Vaccine Site Archive/'+getdate() +Location+'.html')
+def cvs_special(ff):
+    ff.find_element_by_link_text("Massachusetts").click()
 
-def get_website(URL,Location):
-    #URL="https://uma.force.com/covidtesting/s/vaccination"
-    #Location="UMass"
+def get_website(URL,Location,Check_Type):
+    #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
+    #Location="CVS"
     if(str(requests.get(URL))=="<Response [200]>"):
         ff = webdriver.Chrome('/usr/bin/chromedriver')
+        #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
         ff.get(URL)
+        if(Check_Type=="CVS"):
+            cvs_special(ff)
         time.sleep(30)
-        with open('/home/pi/'+Location+'.html', 'w') as f:
+        with open(Location+'.html', 'w', encoding='utf-8') as f:
             f.write(ff.page_source)
         ff.quit()
         f.close()
     else:
         print("FAILED: " + URL)
 def check_for_text(Trigger_Text, Location):
-    with open('/home/pi/'+Location+'.html') as f:
+    with open(Location+'.html') as f:
         if Trigger_Text in f.read():
             return True
         else:
@@ -117,7 +126,7 @@ def catch_false_positive(Location):
 def count_appointments(Location, URL):
     #URL="https://vaxfinder.mass.gov/locations/"
     #Location="Palmer CVS"
-    file = open('/home/pi/'+Location+'.html', 'r', encoding='utf-8')
+    file = open(Location+'.html', 'r', encoding='utf-8')
     Lines = file.readlines()
     num_appointments=0
     num_time_slots = 0
@@ -144,8 +153,47 @@ def count_appointments(Location, URL):
         num_appointments =  -1
     file.close()
     return num_appointments
-
-Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
+def check_cvs(Site,Location,URL):
+    #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
+    #Location="CVS"
+    #Site=Trigger_Text
+    file = open(Location+'.html', 'r', encoding='utf-8')
+    Lines = file.readlines()
+    for i in range(len(Lines)):
+        if ('<tbody><tr><td><span class="city">' in Lines[i]):
+            s_line=Lines[i]
+    s_line=s_line.replace('\t\t\t<tbody><tr><td><span class="city">','')
+    s_line=s_line.replace('</span></td></tr></tbody>\n','')
+    s_line=s_line.replace(', MA</span></td><td><span class="status">','|')
+    s_line=s_line.replace('</span></td></tr><tr><td><span class="city">','|')
+    s_line=s_line.title()
+    site_list = s_line.split("|")
+    SiteNum=int(len(site_list)/2)
+    for i in range(SiteNum,0,-1):
+        if(not site_list[(i-1)*2]==Site):
+            site_list.pop((i-1)*2)
+            site_list.pop((i-1)*2)
+    if(site_list[1]=="Available"):
+        print(gettime() + " Vaccine may be available")
+        tweet("Vaccine may be available at the "+ Location +" CVS\n"+ URL +"\n" + gettime())
+        archivehtml(Location, "found vaccine")
+        return True
+        pass
+    elif(site_list[1]=="Fully Booked"):
+        print(gettime() + " No Appointments")
+        return False
+    else:
+        print("There may be a problem")
+        return False
+def clean_up():
+    fileList = glob.glob('*.html', recursive=True)
+    for filePath in fileList:
+        try:
+            os.remove(filePath)
+        except OSError:
+            print("Error while deleting file")
+#Vaccine_Site_File="/mnt/Dioscuri/Not Synced/Vaccine_Sites.csv"
+Vaccine_Site_File="Z:/Not Synced/Vaccine_Sites_dev.csv"
 
 df=pd.read_csv(Vaccine_Site_File)
 df['Ignore_Time']=datetime.now()
@@ -156,9 +204,19 @@ while True:
             URL=row['URL']
             Trigger_Text=row['Trigger_Text']
             Location=row['Location']
-            get_website(URL,Location)
+            Check_Type=row['Check_Type']
+            if(not path.exists(Location+".html")):
+               get_website(URL,Location,Check_Type)
+            else:
+                print("Already Downloaded")
             if(not catch_false_positive(Location)):
-                if(check_status(Trigger_Text,Location,URL)):
-                    df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                if(Check_Type=="normal"):
+                    if(check_status(Trigger_Text,Location,URL)):
+                        df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                elif(Check_Type=="CVS"):
+                    if(check_cvs(Trigger_Text,Location,URL)):
+                        df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                    
             time.sleep(11+random.uniform(-10,10))
+    clean_up()
         
