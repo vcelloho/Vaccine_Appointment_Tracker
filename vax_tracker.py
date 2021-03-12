@@ -195,6 +195,39 @@ def check_cvs(Site,Location,URL):
     else:
         print("There may be a problem")
         return False
+def read_ma_immunization():
+    URL="https://www.maimmunizations.org/clinic/search?location=02668&search_radius=10+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    Location="MA_Immunization"
+    Check_Type="normal"
+    get_website(URL,Location,Check_Type)
+    file = open(Location+'.html', 'r', encoding='utf-8')
+    Lines = file.readlines()
+    columns = ['Site','Num', 'URL','Ignore_Time']
+    df2 = pd.DataFrame( columns=columns)
+    Link=""
+    for i in range(len(Lines)):
+        if ('<p class="text-xl font-black">' in Lines[i]):
+            s_line=Lines[i+1]
+            Loc=s_line.replace('\n','')
+            print(Location)
+        if('<p><strong>Available Appointments' in Lines[i]):
+            s_line=Lines[i+1]
+            s_line=s_line.replace(':</strong>','')
+            s_line=s_line.replace('</p>','')
+            n_appointment=int(s_line.replace(' ',''))
+            print(n_appointment)
+        if('<p class="my-3 flex">' in Lines[i]):
+            s_line=Lines[i+1]
+            s_line=s_line.replace('<a class="button-primary px-4" href="','')
+            s_line=s_line.replace('">','')
+            s_line=s_line.replace(' ','')
+            Link='https://www.maimmunizations.org'+s_line
+            print(s_line)
+        if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
+            df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
+                ignore_index = True) 
+            Link=""
+        
 def clean_up():
     fileList = glob.glob('*.html', recursive=True)
     for filePath in fileList:
