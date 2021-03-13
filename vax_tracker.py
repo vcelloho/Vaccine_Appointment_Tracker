@@ -27,6 +27,7 @@ import os
 import os.path
 from os import path
 import glob
+from pathlib import Path
 
 
 
@@ -195,6 +196,69 @@ def check_cvs(Site,Location,URL):
     else:
         print("There may be a problem")
         return False
+def read_ma_immunization(SitesFound):
+    #SitesFound = []
+    #SitesIgnore = []
+    URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    Location="MA_Immunization"
+    Check_Type="normal"
+    get_website(URL,Location,Check_Type)
+    file = open(Location+'.html', 'r', encoding='utf-8')
+    Lines = file.readlines()
+    columns = ['Site','Num', 'URL','Ignore_Time']
+    df2 = pd.DataFrame( columns=columns)
+    Link=""
+    for i in range(len(Lines)):
+        if ('<p class="text-xl font-black">' in Lines[i]):
+            s_line=Lines[i+1]
+            s_line=s_line.replace('      ','')
+            Loc=s_line.replace('\n','')
+            #print(Location)
+        if('<p><strong>Available Appointments' in Lines[i]):
+            s_line=Lines[i+1]
+            s_line=s_line.replace(':</strong>','')
+            s_line=s_line.replace('</p>','')
+            n_appointment=int(s_line.replace(' ',''))
+            #print(n_appointment)
+        if('<p class="my-3 flex">' in Lines[i]):
+            s_line=Lines[i+1]
+            s_line=s_line.replace('<a class="button-primary px-4" href="','')
+            s_line=s_line.replace('">','')
+            s_line=s_line.replace(' ','')
+            Link='https://www.maimmunizations.org'+s_line
+            #print(s_line)
+        if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
+            df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
+                ignore_index = True) 
+            Link=""
+    for index, row in df2.iterrows():
+        print(gettime() + " Checking " + row['Site'])
+        if(row['Num']>0 and not row['URL']==''):
+            AlreadyFound=False
+            for i in range(0,(int(len(SitesFound)/2)),1):
+                if(SitesFound[i*2]==row['Site']):
+                    AlreadyFound=True
+            if(not AlreadyFound):
+                print(row['Site'])
+                SitesFound.append(row['Site'])
+                SitesFound.append(datetime.now()+timedelta(hours=1))
+                print(gettime() + " Vaccine may be available")
+                broadcast(str(row['Num']) + " appointments may be available at "+ row['Site'] +row['URL']+"\n" + gettime())
+                archivehtml(Location, "found vaccine")
+                time.sleep(11+random.uniform(-10,10))
+            else:
+                print("Already Found Ignoring")
+    file.close()
+    return SitesFound
+def checksiteignore(SitesFound):
+    listlength=len(SitesFound)
+    for i in range(0,(int(listlength/2)),1):
+        position=listlength-1-2*i
+        if(SitesFound[position]<datetime.now()):
+            SitesFound.pop()
+            SitesFound.pop()
+    return SitesFound
+        
 def clean_up():
     fileList = glob.glob('*.html', recursive=True)
     for filePath in fileList:
@@ -205,7 +269,9 @@ def clean_up():
 
 df=pd.read_csv(settings.Vaccine_Site_File)
 df['Ignore_Time']=datetime.now()
-
+Path("Vaccine Site Archive").mkdir(parents=True, exist_ok=True)
+Path("False Positive Archive").mkdir(parents=True, exist_ok=True)
+MA_SitesFound=[]
 while True:
     for index, row in df.iterrows():
         if(row['Ignore_Time']<datetime.now()):
@@ -228,5 +294,10 @@ while True:
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(11+random.uniform(-10,10))
+    try:
+        MA_SitesFound=read_ma_immunization(MA_SitesFound)
+    except:
+        print("Something went wrong you should probably fix it")
+    MA_SitesFound=checksiteignore(MA_SitesFound)
     clean_up()
         
