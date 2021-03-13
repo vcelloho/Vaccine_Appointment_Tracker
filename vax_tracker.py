@@ -27,6 +27,7 @@ import os
 import os.path
 from os import path
 import glob
+from pathlib import Path
 
 
 
@@ -268,7 +269,6 @@ def clean_up():
 
 df=pd.read_csv(settings.Vaccine_Site_File)
 df['Ignore_Time']=datetime.now()
-from pathlib import Path
 Path("Vaccine Site Archive").mkdir(parents=True, exist_ok=True)
 Path("False Positive Archive").mkdir(parents=True, exist_ok=True)
 MA_SitesFound=[]
