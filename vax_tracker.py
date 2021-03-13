@@ -87,12 +87,14 @@ def cvs_special(ff):
 def get_website(URL,Location,Check_Type):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
-    if(str(requests.get(URL))=="<Response [200]>"):
+    if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
+        elif(Check_Type=="Extra"):
+            time.sleep(30)
         time.sleep(30)
         with open(Location+'.html', 'w', encoding='utf-8') as f:
             f.write(ff.page_source)
@@ -201,7 +203,7 @@ def read_ma_immunization(SitesFound):
     #SitesIgnore = []
     URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     Location="MA_Immunization"
-    Check_Type="normal"
+    Check_Type="Extra"
     get_website(URL,Location,Check_Type)
     file = open(Location+'.html', 'r', encoding='utf-8')
     Lines = file.readlines()
@@ -293,7 +295,7 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
-            time.sleep(11+random.uniform(-10,10))
+            time.sleep(6+random.uniform(-5,5))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
