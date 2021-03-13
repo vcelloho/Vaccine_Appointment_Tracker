@@ -245,6 +245,8 @@ def read_ma_immunization(SitesFound):
                 broadcast(str(row['Num']) + " appointments may be available at "+ row['Site'] +row['URL']+"\n" + gettime())
                 archivehtml(Location, "found vaccine")
                 time.sleep(11+random.uniform(-10,10))
+            else:
+                print("Already Found Ignoring")
     file.close()
     return SitesFound
 def checksiteignore(SitesFound):
@@ -269,9 +271,8 @@ df['Ignore_Time']=datetime.now()
 from pathlib import Path
 Path("Vaccine Site Archive").mkdir(parents=True, exist_ok=True)
 Path("False Positive Archive").mkdir(parents=True, exist_ok=True)
-
+MA_SitesFound=[]
 while True:
-    MA_SitesFound=[]
     for index, row in df.iterrows():
         if(row['Ignore_Time']<datetime.now()):
             URL=row['URL']
@@ -293,7 +294,10 @@ while True:
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(11+random.uniform(-10,10))
-    MA_SitesFound=read_ma_immunization(MA_SitesFound)
+    try:
+        MA_SitesFound=read_ma_immunization(MA_SitesFound)
+    except:
+        print("Something went wrong you should probably fix it")
     MA_SitesFound=checksiteignore(MA_SitesFound)
     clean_up()
         
