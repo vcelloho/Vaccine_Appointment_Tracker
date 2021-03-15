@@ -245,7 +245,7 @@ def read_ma_immunization(SitesFound):
                 SitesFound.append(row['Site'])
                 SitesFound.append(datetime.now()+timedelta(hours=1))
                 print(gettime() + " Vaccine may be available")
-                broadcast(str(row['Num']) + " appointments may be available at "+ row['Site'] +row['URL']+"\n" + gettime())
+                broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                 archivehtml(Location, "found vaccine")
                 time.sleep(11+random.uniform(-10,10))
             else:
