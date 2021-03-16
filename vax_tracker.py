@@ -113,8 +113,11 @@ def get_website(URL,Location,Check_Type):
     if(check_file_valid(Location)):
         print("Download complete")
     else:
-        os.remove(Location+".html")
-        print("File Not Valid")
+        try:
+            os.remove(Location+".html")
+            print("File Not Valid")
+        except:
+            print("File Doesn't Exist")
 def check_for_text(Trigger_Text, Location):
     with open(Location+'.html', encoding='utf-8') as f:
         if Trigger_Text in f.read():
