@@ -128,7 +128,7 @@ def check_status(Trigger_Text, Location, URL):
     else:
         print(gettime() + " Vaccine may be available")
         num_appointments=count_appointments(Location, URL)
-        if(num_appointments==0):
+        if(num_appointments<10):
             print(gettime() + " No Appointments")
         elif(num_appointments==-1):
             broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
@@ -245,7 +245,7 @@ def read_ma_immunization(SitesFound):
                 Link=""
         for index, row in df2.iterrows():
             print(gettime() + " Checking " + row['Site'])
-            if(row['Num']> 10 and not row['URL']==''):
+            if(row['Num']>= 10 and not row['URL']==''):
                 AlreadyFound=False
                 for i in range(0,(int(len(SitesFound)/2)),1):
                     if(SitesFound[i*2]==row['Site']):
