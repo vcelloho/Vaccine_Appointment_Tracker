@@ -84,16 +84,20 @@ def archivehtml(Location,arch_type):
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
 def check_file_valid(Location):
-    if(os.stat(Location+".html").st_size == 0):
-        return False
+    if(path.exists(Location+".html")):
+        if(os.stat(Location+".html").st_size == 0):
+            print("File of Zero Size")
+            return False
+        else:
+            return True
     else:
-        return True
+        print("File Missing")
+        return False
 def get_website(URL,Location,Check_Type):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
-        #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
@@ -119,8 +123,8 @@ def check_for_text(Trigger_Text, Location):
             return False
 def check_status(Trigger_Text, Location, URL):  
     #Trigger_Text="Anything"
-    #Location="Baystate Health"
-    #URL="Anything"
+    #Location="NewTest"
+    #URL="https://vaxfinder.mass.gov/locations/"
     print("Checking " + Location)
     if(check_for_text(Trigger_Text,Location)):
         print(gettime() + " No Appointments")
@@ -128,7 +132,7 @@ def check_status(Trigger_Text, Location, URL):
     else:
         print(gettime() + " Vaccine may be available")
         num_appointments=count_appointments(Location, URL)
-        if(num_appointments<10):
+        if(num_appointments >= 0 and num_appointments<10):
             print(gettime() + " No Appointments")
         elif(num_appointments==-1):
             broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
