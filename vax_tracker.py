@@ -88,22 +88,33 @@ def check_file_valid(Location):
         return False
     else:
         return True
+def dump_html(browser,Location):
+    with open(Location+'.html', 'w', encoding='utf-8') as f:
+        f.write(browser.page_source)
+    f.close()
 def get_website(URL,Location,Check_Type):
-    #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
+    #URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=All&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     #Location="CVS"
+    #Check_Type="Extra"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
+        maxattempts=300
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
-        elif(Check_Type=="Extra"):
+        if(Check_Type=="Extra"):
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("Which service(s) are you seeking?", Location)):
+                    time.sleep(5)
+                    break
+        else:
             time.sleep(30)
-        time.sleep(30)
-        with open(Location+'.html', 'w', encoding='utf-8') as f:
-            f.write(ff.page_source)
+            dump_html(ff,Location)
         ff.quit()
-        f.close()
     else:
         print("FAILED: " + URL)
     if(check_file_valid(Location)):
