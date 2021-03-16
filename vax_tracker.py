@@ -84,6 +84,11 @@ def archivehtml(Location,arch_type):
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
 
+def check_file_valid(Location):
+    if(os.stat(Location+".html").st_size == 0):
+        return False
+    else:
+        return True
 def get_website(URL,Location,Check_Type):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
@@ -102,6 +107,11 @@ def get_website(URL,Location,Check_Type):
         f.close()
     else:
         print("FAILED: " + URL)
+    if(check_file_valid(Location)):
+        print("Download complete")
+    else:
+        os.remove(Location+".html")
+        print("File Not Valid")
 def check_for_text(Trigger_Text, Location):
     with open(Location+'.html', encoding='utf-8') as f:
         if Trigger_Text in f.read():
