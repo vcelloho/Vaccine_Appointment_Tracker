@@ -83,7 +83,6 @@ def archivehtml(Location,arch_type):
         copyfile(Location+'.html', 'Vaccine Site Archive/'+getdate() +Location+'.html')
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
-
 def check_file_valid(Location):
     if(os.stat(Location+".html").st_size == 0):
         return False
@@ -246,7 +245,7 @@ def read_ma_immunization(SitesFound):
                 Link=""
         for index, row in df2.iterrows():
             print(gettime() + " Checking " + row['Site'])
-            if(row['Num']>0 and not row['URL']==''):
+            if(row['Num']> 10 and not row['URL']==''):
                 AlreadyFound=False
                 for i in range(0,(int(len(SitesFound)/2)),1):
                     if(SitesFound[i*2]==row['Site']):
