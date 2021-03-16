@@ -215,52 +215,55 @@ def read_ma_immunization(SitesFound):
     Location="MA_Immunization"
     Check_Type="Extra"
     get_website(URL,Location,Check_Type)
-    file = open(Location+'.html', 'r', encoding='utf-8')
-    Lines = file.readlines()
-    columns = ['Site','Num', 'URL','Ignore_Time']
-    df2 = pd.DataFrame( columns=columns)
-    Link=""
-    for i in range(len(Lines)):
-        if ('<p class="text-xl font-black">' in Lines[i]):
-            s_line=Lines[i+1]
-            s_line=s_line.replace('      ','')
-            Loc=s_line.replace('\n','')
-            #print(Location)
-        if('<p><strong>Available Appointments' in Lines[i]):
-            s_line=Lines[i+1]
-            s_line=s_line.replace(':</strong>','')
-            s_line=s_line.replace('</p>','')
-            n_appointment=int(s_line.replace(' ',''))
-            #print(n_appointment)
-        if('<p class="my-3 flex">' in Lines[i]):
-            s_line=Lines[i+1]
-            s_line=s_line.replace('<a class="button-primary px-4" href="','')
-            s_line=s_line.replace('">','')
-            s_line=s_line.replace(' ','')
-            Link='https://www.maimmunizations.org'+s_line
-            #print(s_line)
-        if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
-            df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
-                ignore_index = True) 
-            Link=""
-    for index, row in df2.iterrows():
-        print(gettime() + " Checking " + row['Site'])
-        if(row['Num']>0 and not row['URL']==''):
-            AlreadyFound=False
-            for i in range(0,(int(len(SitesFound)/2)),1):
-                if(SitesFound[i*2]==row['Site']):
-                    AlreadyFound=True
-            if(not AlreadyFound):
-                print(row['Site'])
-                SitesFound.append(row['Site'])
-                SitesFound.append(datetime.now()+timedelta(hours=1))
-                print(gettime() + " Vaccine may be available")
-                broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
-                archivehtml(Location, "found vaccine")
-                time.sleep(11+random.uniform(-10,10))
-            else:
-                print("Already Found Ignoring")
-    file.close()
+    if(path.exists(Location+".html")):
+        file = open(Location+'.html', 'r', encoding='utf-8')
+        Lines = file.readlines()
+        columns = ['Site','Num', 'URL','Ignore_Time']
+        df2 = pd.DataFrame( columns=columns)
+        Link=""
+        for i in range(len(Lines)):
+            if ('<p class="text-xl font-black">' in Lines[i]):
+                s_line=Lines[i+1]
+                s_line=s_line.replace('      ','')
+                Loc=s_line.replace('\n','')
+                #print(Location)
+            if('<p><strong>Available Appointments' in Lines[i]):
+                s_line=Lines[i+1]
+                s_line=s_line.replace(':</strong>','')
+                s_line=s_line.replace('</p>','')
+                n_appointment=int(s_line.replace(' ',''))
+                #print(n_appointment)
+            if('<p class="my-3 flex">' in Lines[i]):
+                s_line=Lines[i+1]
+                s_line=s_line.replace('<a class="button-primary px-4" href="','')
+                s_line=s_line.replace('">','')
+                s_line=s_line.replace(' ','')
+                Link='https://www.maimmunizations.org'+s_line
+                #print(s_line)
+            if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
+                df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
+                    ignore_index = True) 
+                Link=""
+        for index, row in df2.iterrows():
+            print(gettime() + " Checking " + row['Site'])
+            if(row['Num']>0 and not row['URL']==''):
+                AlreadyFound=False
+                for i in range(0,(int(len(SitesFound)/2)),1):
+                    if(SitesFound[i*2]==row['Site']):
+                        AlreadyFound=True
+                if(not AlreadyFound):
+                    print(row['Site'])
+                    SitesFound.append(row['Site'])
+                    SitesFound.append(datetime.now()+timedelta(hours=1))
+                    print(gettime() + " Vaccine may be available")
+                    broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
+                    archivehtml(Location, "found vaccine")
+                    time.sleep(11+random.uniform(-10,10))
+                else:
+                    print("Already Found Ignoring")
+        file.close()
+    else:
+        print(Location + " Failed to Download Skipping")
     return SitesFound
 def checksiteignore(SitesFound):
     listlength=len(SitesFound)
