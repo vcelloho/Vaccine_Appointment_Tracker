@@ -143,6 +143,50 @@ def check_status(Trigger_Text, Location, URL):
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
+def get_subsite(s_line,Trigger_Text,URL_List):
+    #URL_List=[]
+    position=s_line.find('https://www.maimmunizations.org')
+    s_line=s_line[position:]
+    position=s_line.find('"')
+    s_line[0:position]
+    URL=s_line[0:position]
+    s_line=s_line[position:]
+    if(position>=0):
+        URL_List.append(URL)
+        get_site(s_line,Trigger_Text,URL_List)
+    else:
+        pass
+    return URL_List
+    
+def check_subpage(Trigger_Text, Location, URL):  
+    #Trigger_Text="Anything"
+    #Location="NewTest"
+    #URL="https://vaxfinder.mass.gov/locations/"
+    URL_List=[]
+    print("Checking " + Location)
+    if(check_for_text(Trigger_Text,Location)):
+        print(gettime() + " No Appointments")
+        file = open(Location+'.html', 'r', encoding='utf-8')
+        Lines = file.readlines()
+        for i in range(len(Lines)):
+            get_subsite(Lines[i],Trigger_Text,URL_List)
+            for i in range(0,len(URL_List)):
+                get_website(URL_List[i],Location+str(i),'normal')
+        
+    else:
+        print(gettime() + " No Appointments")
+        return False
+    
+        print(gettime() + " Vaccine may be available")
+        num_appointments=count_appointments(Location, URL)
+        if(num_appointments >= 0 and num_appointments<10):
+            print(gettime() + " No Appointments")
+        elif(num_appointments==-1):
+            broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+        else:
+            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+        archivehtml(Location, "found vaccine")
+        #return True
         
 def catch_false_positive(Location):
     fp_list=pd.read_csv(settings.FalsePositiveCSV)
@@ -312,6 +356,8 @@ while True:
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                    elif(Check_Type=='subpage'):
+                        
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(6+random.uniform(-5,5))
