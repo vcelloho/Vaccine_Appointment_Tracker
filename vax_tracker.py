@@ -153,7 +153,7 @@ def get_subsite(s_line,Trigger_Text,URL_List):
     s_line=s_line[position:]
     if(position>=0):
         URL_List.append(URL)
-        get_site(s_line,Trigger_Text,URL_List)
+        get_subsite(s_line,Trigger_Text,URL_List)
     else:
         pass
     return URL_List
@@ -164,29 +164,32 @@ def check_subpage(Trigger_Text, Location, URL):
     #URL="https://vaxfinder.mass.gov/locations/"
     URL_List=[]
     print("Checking " + Location)
+    num_appointments = 0
     if(check_for_text(Trigger_Text,Location)):
         print(gettime() + " No Appointments")
         file = open(Location+'.html', 'r', encoding='utf-8')
         Lines = file.readlines()
         for i in range(len(Lines)):
             get_subsite(Lines[i],Trigger_Text,URL_List)
+        for i in range(0,len(URL_List)):
+            pass
+            get_website(URL_List[i],Location+str(i),'normal')
+        for i in range(0,len(URL_List)):
+            num_appointments+=count_appointments(Location+str(i), URL_List[i])
+        print(num_appointments)
+        if(num_appointments>0):
+            print(gettime() + " Vaccine may be available")
+            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            archivehtml(Location, "found vaccine")
             for i in range(0,len(URL_List)):
-                get_website(URL_List[i],Location+str(i),'normal')
-        
+                archivehtml(Location+str(i), "found vaccine")
+            return True
+        else:
+            print(gettime() + " No Appointments")
+            return False
     else:
         print(gettime() + " No Appointments")
         return False
-    
-        print(gettime() + " Vaccine may be available")
-        num_appointments=count_appointments(Location, URL)
-        if(num_appointments >= 0 and num_appointments<10):
-            print(gettime() + " No Appointments")
-        elif(num_appointments==-1):
-            broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
-        else:
-            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
-        archivehtml(Location, "found vaccine")
-        #return True
         
 def catch_false_positive(Location):
     fp_list=pd.read_csv(settings.FalsePositiveCSV)
@@ -203,7 +206,7 @@ def count_appointments(Location, URL):
     Lines = file.readlines()
     num_appointments=0
     num_time_slots = 0
-    if("https://www.maimmunizations.org/reg/" in URL):
+    if("https://www.maimmunizations.org/" in URL):
         for i in range(len(Lines)):
             if ("appointments available" in Lines[i]):
                 try:
@@ -357,7 +360,8 @@ while True:
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                     elif(Check_Type=='subpage'):
-                        
+                        if(check_subpage(Trigger_Text, Location, URL)):
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(6+random.uniform(-5,5))
