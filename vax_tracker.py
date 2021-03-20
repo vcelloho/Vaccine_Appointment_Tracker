@@ -314,6 +314,7 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
+            time.sleep(random.uniform(0,1))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
