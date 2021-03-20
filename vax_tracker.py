@@ -311,7 +311,7 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(6+random.uniform(-5,5))
