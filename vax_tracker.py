@@ -69,6 +69,7 @@ def broadcast(message):
             message=message.replace('https://','')
             message=message.replace('www.','')
             send(message)
+    time.sleep(5)
 def gettime():
     now = datetime.now()
     return(now.strftime("%D %H:%M:%S"))
@@ -264,7 +265,6 @@ def read_ma_immunization(SitesFound):
                     print(gettime() + " Vaccine may be available")
                     broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                     archivehtml(Location, "found vaccine")
-                    time.sleep(11+random.uniform(-10,10))
                 else:
                     print("Already Found Ignoring")
         file.close()
@@ -314,7 +314,6 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
-            time.sleep(6+random.uniform(-5,5))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
