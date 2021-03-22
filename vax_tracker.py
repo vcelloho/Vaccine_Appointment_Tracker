@@ -69,6 +69,7 @@ def broadcast(message):
             message=message.replace('https://','')
             message=message.replace('www.','')
             send(message)
+    time.sleep(5)
 def gettime():
     now = datetime.now()
     return(now.strftime("%D %H:%M:%S"))
@@ -235,6 +236,7 @@ def check_cvs(Site,Location,URL):
     #Site=Trigger_Text
     file = open(Location+'.html', 'r', encoding='utf-8')
     Lines = file.readlines()
+    s_line=''
     for i in range(len(Lines)):
         if ('<tbody><tr><td><span class="city">' in Lines[i]):
             s_line=Lines[i]
@@ -245,21 +247,25 @@ def check_cvs(Site,Location,URL):
     s_line=s_line.title()
     site_list = s_line.split("|")
     SiteNum=int(len(site_list)/2)
-    for i in range(SiteNum,0,-1):
-        if(not site_list[(i-1)*2]==Site):
-            site_list.pop((i-1)*2)
-            site_list.pop((i-1)*2)
-    if(site_list[1]=="Available"):
-        print(gettime() + " Vaccine may be available")
-        broadcast("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
-        archivehtml(Location, "found vaccine")
-        return True
-        pass
-    elif(site_list[1]=="Fully Booked"):
-        print(gettime() + " No Appointments")
-        return False
+    if(SiteNum>0):
+        for i in range(SiteNum,0,-1):
+            if(not site_list[(i-1)*2]==Site):
+                site_list.pop((i-1)*2)
+                site_list.pop((i-1)*2)
+        if(site_list[1]=="Available"):
+            print(gettime() + " Vaccine may be available")
+            broadcast("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
+            archivehtml(Location, "found vaccine")
+            return True
+            pass
+        elif(site_list[1]=="Fully Booked"):
+            print(gettime() + " No Appointments")
+            return False
+        else:
+            print("There may be a problem")
+            return False
     else:
-        print("There may be a problem")
+        print("Failed To Load Sites CVS")
         return False
 def read_ma_immunization(SitesFound):
     #SitesFound = []
@@ -311,7 +317,6 @@ def read_ma_immunization(SitesFound):
                     print(gettime() + " Vaccine may be available")
                     broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                     archivehtml(Location, "found vaccine")
-                    time.sleep(11+random.uniform(-10,10))
                 else:
                     print("Already Found Ignoring")
         file.close()
@@ -348,7 +353,10 @@ while True:
             Location=row['Location']
             Check_Type=row['Check_Type']
             if(not path.exists(Location+".html")):
-               get_website(URL,Location,Check_Type)
+                try:
+                    get_website(URL,Location,Check_Type)
+                except:
+                    print("Problem Loading")
             else:
                 print("Already Downloaded")
             if(path.exists(Location+".html")):
@@ -358,13 +366,13 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
                     elif(Check_Type=='subpage'):
                         if(check_subpage(Trigger_Text, Location, URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
-            time.sleep(6+random.uniform(-5,5))
+            time.sleep(random.uniform(0,1))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
