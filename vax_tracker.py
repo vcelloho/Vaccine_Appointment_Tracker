@@ -144,6 +144,66 @@ def check_status(Trigger_Text, Location, URL):
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
+    
+def con_google_redirect(URL):
+    #URL='https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org%2F%2Freg%2F1560324950&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNFeJUbyawISY9F9Vwuqn6EENo0zCQ'
+    if('https://www.google.com/url?q=' in URL):
+        URL=URL.replace('https://www.google.com/url?q=','')
+        position=URL.find('&amp')
+        URL=URL[0:position]
+        URL=URL.replace('%3A',':')
+        URL=URL.replace('%2F','/')
+    return URL
+
+def get_subsite(s_line,Trigger_Text,URL_List):
+    #URL_List=[]
+    position=s_line.find(Trigger_Text)
+    s_line=s_line[position:]
+    position=s_line.find('"')
+    s_line[0:position]
+    URL=con_google_redirect(s_line[0:position])
+    s_line=s_line[position:]
+    if(position>=0):
+        URL_List.append(URL)
+        get_subsite(s_line,Trigger_Text,URL_List)
+    else:
+        pass
+    return URL_List
+
+
+    
+def check_subpage(Trigger_Text, Location, URL):  
+    #Trigger_Text="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
+    #Location="NewTest"
+    #URL="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
+    URL_List=[]
+    print("Checking " + Location)
+    num_appointments = 0
+    if(check_for_text(Trigger_Text,Location)):
+        print(gettime() + " Trigger Text Found")
+        file = open(Location+'.html', 'r', encoding='utf-8')
+        Lines = file.readlines()
+        for i in range(len(Lines)):
+            get_subsite(Lines[i],Trigger_Text,URL_List)
+        for i in range(0,len(URL_List)):
+            pass
+            get_website(URL_List[i],Location+str(i),'normal')
+        for i in range(0,len(URL_List)):
+            num_appointments+=count_appointments(Location+str(i), URL_List[i])
+        print(num_appointments)
+        if(num_appointments>0):
+            print(gettime() + " Vaccine may be available")
+            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            archivehtml(Location, "found vaccine")
+            for i in range(0,len(URL_List)):
+                archivehtml(Location+str(i), "found vaccine")
+            return True
+        else:
+            print(gettime() + " No Appointments")
+            return False
+    else:
+        print(gettime() + " No Appointments")
+        return False
         
 def catch_false_positive(Location):
     fp_list=pd.read_csv(settings.FalsePositiveCSV)
@@ -160,7 +220,7 @@ def count_appointments(Location, URL):
     Lines = file.readlines()
     num_appointments=0
     num_time_slots = 0
-    if("https://www.maimmunizations.org/reg/" in URL):
+    if("https://www.maimmunizations.org/" in URL):
         for i in range(len(Lines)):
             if ("appointments available" in Lines[i]):
                 try:
@@ -320,6 +380,12 @@ while True:
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
+                    elif(Check_Type=='subpage'):
+                        try:
+                            if(check_subpage(Trigger_Text, Location, URL)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        except:
+                            print("Problem in subpage checker")
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(random.uniform(0,1))
