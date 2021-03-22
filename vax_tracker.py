@@ -144,13 +144,24 @@ def check_status(Trigger_Text, Location, URL):
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
+    
+def con_google_redirect(URL):
+    #URL='https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org%2F%2Freg%2F1560324950&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNFeJUbyawISY9F9Vwuqn6EENo0zCQ'
+    if('https://www.google.com/url?q=' in URL):
+        URL=URL.replace('https://www.google.com/url?q=','')
+        position=URL.find('&amp')
+        URL=URL[0:position]
+        URL=URL.replace('%3A',':')
+        URL=URL.replace('%2F','/')
+    return URL
+
 def get_subsite(s_line,Trigger_Text,URL_List):
     #URL_List=[]
-    position=s_line.find('https://www.maimmunizations.org')
+    position=s_line.find(Trigger_Text)
     s_line=s_line[position:]
     position=s_line.find('"')
     s_line[0:position]
-    URL=s_line[0:position]
+    URL=con_google_redirect(s_line[0:position])
     s_line=s_line[position:]
     if(position>=0):
         URL_List.append(URL)
@@ -158,16 +169,18 @@ def get_subsite(s_line,Trigger_Text,URL_List):
     else:
         pass
     return URL_List
+
+
     
 def check_subpage(Trigger_Text, Location, URL):  
-    #Trigger_Text="Anything"
+    #Trigger_Text="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
     #Location="NewTest"
-    #URL="https://vaxfinder.mass.gov/locations/"
+    #URL="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
     URL_List=[]
     print("Checking " + Location)
     num_appointments = 0
     if(check_for_text(Trigger_Text,Location)):
-        print(gettime() + " No Appointments")
+        print(gettime() + " Trigger Text Found")
         file = open(Location+'.html', 'r', encoding='utf-8')
         Lines = file.readlines()
         for i in range(len(Lines)):
@@ -368,8 +381,11 @@ while True:
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
                     elif(Check_Type=='subpage'):
-                        if(check_subpage(Trigger_Text, Location, URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        try:
+                            if(check_subpage(Trigger_Text, Location, URL)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        except:
+                            print("Problem in subpage checker")
             else:
                 print(Location + " Failed to Download Skipping")
             time.sleep(random.uniform(0,1))
