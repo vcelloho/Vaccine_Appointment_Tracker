@@ -84,6 +84,20 @@ def archivehtml(Location,arch_type):
         copyfile(Location+'.html', 'Vaccine Site Archive/'+getdate() +Location+'.html')
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
+def mercy_special(ff):
+    ff.find_element_by_name("SiteName").click()
+    time.sleep(2)
+    ff.find_element_by_tag_name("button").click()
+    for i in range(0,5):
+        if(i>0):
+            buttons=ff.find_elements_by_tag_name("button")
+            buttons[1].click()
+        time.sleep(2)
+        if('There are no open appointments on this day.' in ff.page_source):
+            print("No Appointments")
+        else:
+            print("Appointment Found")
+            break
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
         if(os.stat(Location+".html").st_size == 0):
@@ -95,13 +109,16 @@ def check_file_valid(Location):
         print("File Missing")
         return False
 def get_website(URL,Location,Check_Type):
-    #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
-    #Location="CVS"
+    #URL="https://apps.sphp.com/THofNECOVIDVaccinations/"
+    #Location="Mercy"
+    #Check_Type="Mercy"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
+        elif(Check_Type=="Mercy"):
+            mercy_special(ff)
         elif(Check_Type=="Extra"):
             time.sleep(30)
         time.sleep(30)
