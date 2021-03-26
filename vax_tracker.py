@@ -191,7 +191,7 @@ def check_subpage(Trigger_Text, Location, URL):
         for i in range(0,len(URL_List)):
             num_appointments+=count_appointments(Location+str(i), URL_List[i])
         print(num_appointments)
-        if(num_appointments>0):
+        if(num_appointments>=10):
             print(gettime() + " Vaccine may be available")
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
             archivehtml(Location, "found vaccine")
