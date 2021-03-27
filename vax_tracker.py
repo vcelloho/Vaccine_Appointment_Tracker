@@ -208,7 +208,7 @@ def check_subpage(Trigger_Text, Location, URL):
         for i in range(0,len(URL_List)):
             num_appointments+=count_appointments(Location+str(i), URL_List[i])
         print(num_appointments)
-        if(num_appointments>0):
+        if(num_appointments>=10):
             print(gettime() + " Vaccine may be available")
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
             archivehtml(Location, "found vaccine")
@@ -300,7 +300,7 @@ def check_cvs(Site,Location,URL):
 def read_ma_immunization(SitesFound):
     #SitesFound = []
     #SitesIgnore = []
-    URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     Location="MA_Immunization"
     Check_Type="Extra"
     get_website(URL,Location,Check_Type)
@@ -316,10 +316,10 @@ def read_ma_immunization(SitesFound):
                 s_line=s_line.replace('      ','')
                 Loc=s_line.replace('\n','')
                 #print(Location)
-            if('<p><strong>Available Appointments' in Lines[i]):
+            if('<strong>Available Appointments:</strong>' in Lines[i]):
                 s_line=Lines[i+1]
                 s_line=s_line.replace(':</strong>','')
-                s_line=s_line.replace('</p>','')
+                #s_line=s_line.replace('</p>','')
                 n_appointment=int(s_line.replace(' ',''))
                 #print(n_appointment)
             if('<p class="my-3 flex">' in Lines[i]):
@@ -327,7 +327,7 @@ def read_ma_immunization(SitesFound):
                 s_line=s_line.replace('<a class="button-primary px-4" href="','')
                 s_line=s_line.replace('">','')
                 s_line=s_line.replace(' ','')
-                Link='https://www.maimmunizations.org'+s_line
+                Link='https://clinics.maimmunizations.org'+s_line
                 #print(s_line)
             if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
                 df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
