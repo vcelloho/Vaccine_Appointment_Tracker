@@ -398,8 +398,11 @@ while True:
                         if(check_status(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                     elif(Check_Type=="Mercy"):
-                        if(check_status(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        try:
+                            if(check_status(Trigger_Text,Location,URL)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        except:
+                            print("Problem in Mercy Check")
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
