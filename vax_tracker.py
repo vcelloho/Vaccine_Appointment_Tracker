@@ -86,13 +86,13 @@ def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
 def mercy_special(ff):
     ff.find_element_by_name("SiteName").click()
-    time.sleep(2)
+    time.sleep(5)
     ff.find_element_by_tag_name("button").click()
     for i in range(0,5):
         if(i>0):
             buttons=ff.find_elements_by_tag_name("button")
             buttons[1].click()
-        time.sleep(2)
+        time.sleep(3)
         if('There are no open appointments on this day.' in ff.page_source):
             print("No Appointments")
         else:
@@ -117,11 +117,14 @@ def get_website(URL,Location,Check_Type):
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
+            time.sleep(30)
         elif(Check_Type=="Mercy"):
+            time.sleep(5)
             mercy_special(ff)
         elif(Check_Type=="Extra"):
+            time.sleep(60)
+        else:
             time.sleep(30)
-        time.sleep(30)
         with open(Location+'.html', 'w', encoding='utf-8') as f:
             f.write(ff.page_source)
         ff.quit()
