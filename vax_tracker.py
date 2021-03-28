@@ -89,9 +89,11 @@ def mercy_special(ff):
     time.sleep(5)
     ff.find_element_by_tag_name("button").click()
     for i in range(0,5):
-        if(i>0):
-            buttons=ff.find_elements_by_tag_name("button")
-            buttons[1].click()
+        buttons=ff.find_elements_by_tag_name("button")
+        for j in range (0,len(buttons)):
+            if(buttons[j].text=="Next Day >"):
+                buttons[j].click()
+                break
         time.sleep(3)
         if('There are no open appointments on this day.' in ff.page_source):
             print("No Appointments")
