@@ -326,7 +326,7 @@ def read_ma_immunization(SitesFound):
                 if(not AlreadyFound):
                     print(row['Site'])
                     SitesFound.append(row['Site'])
-                    SitesFound.append(datetime.now()+timedelta(hours=1))
+                    SitesFound.append(datetime.now()+timedelta(hours=4))
                     print(gettime() + " Vaccine may be available")
                     broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                     archivehtml(Location, "found vaccine")
