@@ -92,13 +92,14 @@ def check_file_valid(Location):
         else:
             return True
     else:
-        return True
+        print("File Missing")
+        return False
+    
 def dump_html(browser,Location):
     with open(Location+'.html', 'w', encoding='utf-8') as f:
         f.write(browser.page_source)
-    f.close()
-        print("File Missing")
-        return False
+        f.close()
+
 def get_website(URL,Location,Check_Type):
     #URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=All&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     #Location="CVS"
