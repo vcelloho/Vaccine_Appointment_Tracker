@@ -69,6 +69,7 @@ def broadcast(message):
             message=message.replace('https://','')
             message=message.replace('www.','')
             send(message)
+    time.sleep(5)
 def gettime():
     now = datetime.now()
     return(now.strftime("%D %H:%M:%S"))
@@ -84,21 +85,26 @@ def archivehtml(Location,arch_type):
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
 def check_file_valid(Location):
-    if(os.stat(Location+".html").st_size == 0):
-        return False
+    if(path.exists(Location+".html")):
+        if(os.stat(Location+".html").st_size == 0):
+            print("File of Zero Size")
+            return False
+        else:
+            return True
     else:
         return True
 def dump_html(browser,Location):
     with open(Location+'.html', 'w', encoding='utf-8') as f:
         f.write(browser.page_source)
     f.close()
+        print("File Missing")
+        return False
 def get_website(URL,Location,Check_Type):
     #URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=All&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     #Location="CVS"
     #Check_Type="Extra"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
-        #ff = webdriver.Chrome('G:/@@@/Programs/chromedriver.exe')
         maxattempts=300
         ff.get(URL)
         if(Check_Type=="CVS"):
@@ -120,8 +126,11 @@ def get_website(URL,Location,Check_Type):
     if(check_file_valid(Location)):
         print("Download complete")
     else:
-        os.remove(Location+".html")
-        print("File Not Valid")
+        try:
+            os.remove(Location+".html")
+            print("File Not Valid")
+        except:
+            print("File Doesn't Exist")
 def check_for_text(Trigger_Text, Location):
     with open(Location+'.html', encoding='utf-8') as f:
         if Trigger_Text in f.read():
@@ -130,8 +139,8 @@ def check_for_text(Trigger_Text, Location):
             return False
 def check_status(Trigger_Text, Location, URL):  
     #Trigger_Text="Anything"
-    #Location="Baystate Health"
-    #URL="Anything"
+    #Location="NewTest"
+    #URL="https://vaxfinder.mass.gov/locations/"
     print("Checking " + Location)
     if(check_for_text(Trigger_Text,Location)):
         print(gettime() + " No Appointments")
@@ -139,7 +148,7 @@ def check_status(Trigger_Text, Location, URL):
     else:
         print(gettime() + " Vaccine may be available")
         num_appointments=count_appointments(Location, URL)
-        if(num_appointments<10):
+        if(num_appointments >= 0 and num_appointments<10):
             print(gettime() + " No Appointments")
         elif(num_appointments==-1):
             broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
@@ -147,6 +156,66 @@ def check_status(Trigger_Text, Location, URL):
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
         return True
+    
+def con_google_redirect(URL):
+    #URL='https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org%2F%2Freg%2F1560324950&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNFeJUbyawISY9F9Vwuqn6EENo0zCQ'
+    if('https://www.google.com/url?q=' in URL):
+        URL=URL.replace('https://www.google.com/url?q=','')
+        position=URL.find('&amp')
+        URL=URL[0:position]
+        URL=URL.replace('%3A',':')
+        URL=URL.replace('%2F','/')
+    return URL
+
+def get_subsite(s_line,Trigger_Text,URL_List):
+    #URL_List=[]
+    position=s_line.find(Trigger_Text)
+    s_line=s_line[position:]
+    position=s_line.find('"')
+    s_line[0:position]
+    URL=con_google_redirect(s_line[0:position])
+    s_line=s_line[position:]
+    if(position>=0):
+        URL_List.append(URL)
+        get_subsite(s_line,Trigger_Text,URL_List)
+    else:
+        pass
+    return URL_List
+
+
+    
+def check_subpage(Trigger_Text, Location, URL):  
+    #Trigger_Text="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
+    #Location="NewTest"
+    #URL="https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org"
+    URL_List=[]
+    print("Checking " + Location)
+    num_appointments = 0
+    if(check_for_text(Trigger_Text,Location)):
+        print(gettime() + " Trigger Text Found")
+        file = open(Location+'.html', 'r', encoding='utf-8')
+        Lines = file.readlines()
+        for i in range(len(Lines)):
+            get_subsite(Lines[i],Trigger_Text,URL_List)
+        for i in range(0,len(URL_List)):
+            pass
+            get_website(URL_List[i],Location+str(i),'normal')
+        for i in range(0,len(URL_List)):
+            num_appointments+=count_appointments(Location+str(i), URL_List[i])
+        print(num_appointments)
+        if(num_appointments>0):
+            print(gettime() + " Vaccine may be available")
+            broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            archivehtml(Location, "found vaccine")
+            for i in range(0,len(URL_List)):
+                archivehtml(Location+str(i), "found vaccine")
+            return True
+        else:
+            print(gettime() + " No Appointments")
+            return False
+    else:
+        print(gettime() + " No Appointments")
+        return False
         
 def catch_false_positive(Location):
     fp_list=pd.read_csv(settings.FalsePositiveCSV)
@@ -163,7 +232,7 @@ def count_appointments(Location, URL):
     Lines = file.readlines()
     num_appointments=0
     num_time_slots = 0
-    if("https://www.maimmunizations.org/reg/" in URL):
+    if("https://www.maimmunizations.org/" in URL):
         for i in range(len(Lines)):
             if ("appointments available" in Lines[i]):
                 try:
@@ -192,6 +261,7 @@ def check_cvs(Site,Location,URL):
     #Site=Trigger_Text
     file = open(Location+'.html', 'r', encoding='utf-8')
     Lines = file.readlines()
+    s_line=''
     for i in range(len(Lines)):
         if ('<tbody><tr><td><span class="city">' in Lines[i]):
             s_line=Lines[i]
@@ -202,26 +272,30 @@ def check_cvs(Site,Location,URL):
     s_line=s_line.title()
     site_list = s_line.split("|")
     SiteNum=int(len(site_list)/2)
-    for i in range(SiteNum,0,-1):
-        if(not site_list[(i-1)*2]==Site):
-            site_list.pop((i-1)*2)
-            site_list.pop((i-1)*2)
-    if(site_list[1]=="Available"):
-        print(gettime() + " Vaccine may be available")
-        broadcast("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
-        archivehtml(Location, "found vaccine")
-        return True
-        pass
-    elif(site_list[1]=="Fully Booked"):
-        print(gettime() + " No Appointments")
-        return False
+    if(SiteNum>0):
+        for i in range(SiteNum,0,-1):
+            if(not site_list[(i-1)*2]==Site):
+                site_list.pop((i-1)*2)
+                site_list.pop((i-1)*2)
+        if(site_list[1]=="Available"):
+            print(gettime() + " Vaccine may be available")
+            broadcast("Vaccine may be available at the "+ Site +" CVS\n"+ URL +"\n" + gettime())
+            archivehtml(Location, "found vaccine")
+            return True
+            pass
+        elif(site_list[1]=="Fully Booked"):
+            print(gettime() + " No Appointments")
+            return False
+        else:
+            print("There may be a problem")
+            return False
     else:
-        print("There may be a problem")
+        print("Failed To Load Sites CVS")
         return False
 def read_ma_immunization(SitesFound):
     #SitesFound = []
     #SitesIgnore = []
-    URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     Location="MA_Immunization"
     Check_Type="Extra"
     get_website(URL,Location,Check_Type)
@@ -237,10 +311,10 @@ def read_ma_immunization(SitesFound):
                 s_line=s_line.replace('      ','')
                 Loc=s_line.replace('\n','')
                 #print(Location)
-            if('<p><strong>Available Appointments' in Lines[i]):
+            if('<strong>Available Appointments:</strong>' in Lines[i]):
                 s_line=Lines[i+1]
                 s_line=s_line.replace(':</strong>','')
-                s_line=s_line.replace('</p>','')
+                #s_line=s_line.replace('</p>','')
                 n_appointment=int(s_line.replace(' ',''))
                 #print(n_appointment)
             if('<p class="my-3 flex">' in Lines[i]):
@@ -248,7 +322,7 @@ def read_ma_immunization(SitesFound):
                 s_line=s_line.replace('<a class="button-primary px-4" href="','')
                 s_line=s_line.replace('">','')
                 s_line=s_line.replace(' ','')
-                Link='https://www.maimmunizations.org'+s_line
+                Link='https://clinics.maimmunizations.org'+s_line
                 #print(s_line)
             if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
                 df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
@@ -268,7 +342,6 @@ def read_ma_immunization(SitesFound):
                     print(gettime() + " Vaccine may be available")
                     broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                     archivehtml(Location, "found vaccine")
-                    time.sleep(11+random.uniform(-10,10))
                 else:
                     print("Already Found Ignoring")
         file.close()
@@ -305,7 +378,10 @@ while True:
             Location=row['Location']
             Check_Type=row['Check_Type']
             if(not path.exists(Location+".html")):
-               get_website(URL,Location,Check_Type)
+                try:
+                    get_website(URL,Location,Check_Type)
+                except:
+                    print("Problem Loading")
             else:
                 print("Already Downloaded")
             if(path.exists(Location+".html")):
@@ -315,10 +391,16 @@ while True:
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
+                    elif(Check_Type=='subpage'):
+                        try:
+                            if(check_subpage(Trigger_Text, Location, URL)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        except:
+                            print("Problem in subpage checker")
             else:
                 print(Location + " Failed to Download Skipping")
-            time.sleep(6+random.uniform(-5,5))
+            time.sleep(random.uniform(0,1))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
