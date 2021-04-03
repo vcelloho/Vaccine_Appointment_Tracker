@@ -117,31 +117,94 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    #URL="https://www.maimmunizations.org/clinic/search?location=01002&search_radius=All&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&q%5Bclinic_date_gteq%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
-    #Location="CVS"
-    #Check_Type="Extra"
+    #URL="https://uma.force.com/covidtesting/s/vaccination"
+    #Location="UMass Campus Center"
+    #Check_Type="UMass"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
-        maxattempts=300
+        maxattempts=30
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
-            time.sleep(30)
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("worcester", Location)):
+                    time.sleep(2)
+                    break
         elif(Check_Type=="Extra"):
+            maxattempts=300
             for i in range(0,maxattempts):
                 print(i)
                 time.sleep(1)
                 dump_html(ff,Location)
                 if(check_for_text("Which service(s) are you seeking?", Location)):
-                    time.sleep(5)
+                    time.sleep(2)
                     break
         elif(Check_Type=="Mercy"):
             time.sleep(5)
             mercy_special(ff)
-        elif(Check_Type=="Extra"):
-            time.sleep(60)
+        elif(Check_Type=="Baystate"):
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("Registration Temporarily Unavailable", Location)):
+                    break
+                elif(check_for_text("Baystate Health Education Center", Location)):
+                    time.sleep(2)
+                    break
+                elif(check_for_text("Baystate Health Education Center", Location)):
+                    time.sleep(2)
+                    break
+        elif(Check_Type=="UMass"):
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("there are no time slots available at the moment to book first", Location)):
+                    break
+                elif(check_for_text("If you have not had any COVID-19 vaccinations click below", Location)):
+                    time.sleep(2)
+                    break
+        elif(Check_Type=="maimmunization_reg"):
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("This clinic is closed. Please check other clinics.?", Location)):
+                    break
+                elif(check_for_text("Clinic does not have any appointment slots available.",Location)):
+                    break
+                elif(check_for_text("Please select a time for your appointment.", Location)):
+                    time.sleep(2)
+                    break
         else:
-            time.sleep(30)
+            if(Location=="Amherst Bangs Center"):
+                for i in range(0,maxattempts):
+                    print(i)
+                    time.sleep(1)
+                    dump_html(ff,Location)
+                    if(check_for_text("Amherst Clinic Appointments", Location)):
+                        time.sleep(2)
+                        break
+                    elif(check_for_text("https://www.google.com/url?q=https%3A%2F%2Fwww.maimmunizations.org%2F%2Freg", Location)):
+                        time.sleep(2)
+                        break
+            elif(Location=="Northampton Clinic"):
+                for i in range(0,maxattempts):
+                    print(i)
+                    time.sleep(1)
+                    dump_html(ff,Location)
+                    if(check_for_text("Both sites are open to all Massachusetts residents who are eligible to receive the vaccine. ", Location)):
+                        time.sleep(2)
+                        break
+                    elif(check_for_text("https://www.maimmunizations.org//reg/", Location)):
+                        time.sleep(2)
+                        break
+            else:
+                time.sleep(30)
         dump_html(ff,Location)
         ff.quit()
     else:
@@ -222,7 +285,7 @@ def check_subpage(Trigger_Text, Location, URL):
             get_subsite(Lines[i],Trigger_Text,URL_List)
         for i in range(0,len(URL_List)):
             pass
-            get_website(URL_List[i],Location+str(i),'normal')
+            get_website(URL_List[i],Location+str(i),'maimmunization_reg')
         for i in range(0,len(URL_List)):
             num_appointments+=count_appointments(Location+str(i), URL_List[i])
         print(num_appointments)
@@ -409,10 +472,7 @@ while True:
                 print("Already Downloaded")
             if(path.exists(Location+".html")):
                 if(not catch_false_positive(Location)):
-                    if(Check_Type=="normal"):
-                        if(check_status(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
-                    elif(Check_Type=="Mercy"):
+                    if(Check_Type=="Mercy"):
                         try:
                             if(check_status(Trigger_Text,Location,URL)):
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
@@ -427,9 +487,12 @@ while True:
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                         except:
                             print("Problem in subpage checker")
+                    else:
+                        if(check_status(Trigger_Text,Location,URL)):
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
-            time.sleep(random.uniform(0,1))
+            #time.sleep(random.uniform(0,1))
     try:
         MA_SitesFound=read_ma_immunization(MA_SitesFound)
     except:
