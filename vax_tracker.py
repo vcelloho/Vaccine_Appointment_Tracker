@@ -84,6 +84,22 @@ def archivehtml(Location,arch_type):
         copyfile(Location+'.html', 'Vaccine Site Archive/'+getdate() +Location+'.html')
 def cvs_special(ff):
     ff.find_element_by_link_text("Massachusetts").click()
+def mercy_special(ff):
+    ff.find_element_by_name("SiteName").click()
+    time.sleep(5)
+    ff.find_element_by_tag_name("button").click()
+    for i in range(0,5):
+        buttons=ff.find_elements_by_tag_name("button")
+        for j in range (0,len(buttons)):
+            if(buttons[j].text=="Next Day >"):
+                buttons[j].click()
+                break
+        time.sleep(3)
+        if('There are no open appointments on this day.' in ff.page_source):
+            print("No Appointments")
+        else:
+            print("Appointment Found")
+            break
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
         if(os.stat(Location+".html").st_size == 0):
@@ -110,7 +126,8 @@ def get_website(URL,Location,Check_Type):
         ff.get(URL)
         if(Check_Type=="CVS"):
             cvs_special(ff)
-        if(Check_Type=="Extra"):
+            time.sleep(30)
+        elif(Check_Type=="Extra"):
             for i in range(0,maxattempts):
                 print(i)
                 time.sleep(1)
@@ -118,9 +135,14 @@ def get_website(URL,Location,Check_Type):
                 if(check_for_text("Which service(s) are you seeking?", Location)):
                     time.sleep(5)
                     break
+        elif(Check_Type=="Mercy"):
+            time.sleep(5)
+            mercy_special(ff)
+        elif(Check_Type=="Extra"):
+            time.sleep(60)
         else:
             time.sleep(30)
-            dump_html(ff,Location)
+        dump_html(ff,Location)
         ff.quit()
     else:
         print("FAILED: " + URL)
@@ -204,7 +226,7 @@ def check_subpage(Trigger_Text, Location, URL):
         for i in range(0,len(URL_List)):
             num_appointments+=count_appointments(Location+str(i), URL_List[i])
         print(num_appointments)
-        if(num_appointments>0):
+        if(num_appointments>=10):
             print(gettime() + " Vaccine may be available")
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
             archivehtml(Location, "found vaccine")
@@ -339,7 +361,7 @@ def read_ma_immunization(SitesFound):
                 if(not AlreadyFound):
                     print(row['Site'])
                     SitesFound.append(row['Site'])
-                    SitesFound.append(datetime.now()+timedelta(hours=1))
+                    SitesFound.append(datetime.now()+timedelta(hours=4))
                     print(gettime() + " Vaccine may be available")
                     broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
                     archivehtml(Location, "found vaccine")
@@ -390,6 +412,12 @@ while True:
                     if(Check_Type=="normal"):
                         if(check_status(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                    elif(Check_Type=="Mercy"):
+                        try:
+                            if(check_status(Trigger_Text,Location,URL)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                        except:
+                            print("Problem in Mercy Check")
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
                             df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
