@@ -199,7 +199,9 @@ def get_website(URL,Location,Check_Type):
                 print(i)
                 time.sleep(1)
                 dump_html(ff,Location)
-                if(check_for_text("Let’s check COVID-19 vaccine availability in your area", Location)):
+                if(check_for_text("Appointments unavailable", Location)):
+                    break
+                elif(check_for_text("Appointments available!", Location)):
                     time.sleep(2)
                     break
         else:
