@@ -14,6 +14,7 @@ Created on Mon Feb 22 13:13:48 2021
 
   
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import time
 import smtplib
 import random
@@ -100,6 +101,18 @@ def mercy_special(ff):
         else:
             print("Appointment Found")
             break
+def walgreens_special(ff):
+    ff.find_element_by_link_text("Schedule new appointment").click()
+    time.sleep(5)
+    inputElement = ff.find_element_by_id("inputLocation")
+    inputElement.clear()
+    inputElement.send_keys('01038')
+    inputElement.send_keys(Keys.ENTER)
+    buttons=ff.find_elements_by_tag_name("button")
+    for button in buttons:
+        if(button.text=="Search"):
+            button.click()
+            break  
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
         if(os.stat(Location+".html").st_size == 0):
@@ -117,9 +130,9 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    #URL="https://uma.force.com/covidtesting/s/vaccination"
+    #URL="https://www.walgreens.com/findcare/vaccination/covid-19?ban=covid_vaccine1_landing_schedule"
     #Location="UMass Campus Center"
-    #Check_Type="UMass"
+    #Check_Type="Walgreens"
     if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         maxattempts=30
@@ -180,6 +193,15 @@ def get_website(URL,Location,Check_Type):
                 elif(check_for_text("Please select a time for your appointment.", Location)):
                     time.sleep(2)
                     break
+        elif(Location=="Walgreens"):
+            walgreens_special(ff)
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("Let’s check COVID-19 vaccine availability in your area", Location)):
+                    time.sleep(2)
+                    break
         else:
             if(Location=="Amherst Bangs Center"):
                 for i in range(0,maxattempts):
@@ -237,7 +259,10 @@ def check_status(Trigger_Text, Location, URL):
         if(num_appointments >= 0 and num_appointments<10):
             print(gettime() + " No Appointments")
         elif(num_appointments==-1):
-            broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            if(Location=="Walgreens"):
+                broadcast("Vaccine may be available at a Walgreens in the Pioneer Valley, check with Walgreens for specific locations"+"\n"+ URL +"\n"+ gettime())
+            else:
+                broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         else:
             broadcast(str(num_appointments) + " vaccine appointments may be available at "+ Location +"\n"+ URL +"\n" + gettime())
         archivehtml(Location, "found vaccine")
