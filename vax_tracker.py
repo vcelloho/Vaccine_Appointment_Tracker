@@ -505,7 +505,7 @@ while True:
                             print("Problem in Mercy Check")
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=4)
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
                     elif(Check_Type=='subpage'):
                         try:
                             if(check_subpage(Trigger_Text, Location, URL)):
@@ -514,7 +514,10 @@ while True:
                             print("Problem in subpage checker")
                     else:
                         if(check_status(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                            if(Location=="Walgreens"):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
+                            else:
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
             else:
                 print(Location + " Failed to Download Skipping")
             #time.sleep(random.uniform(0,1))
