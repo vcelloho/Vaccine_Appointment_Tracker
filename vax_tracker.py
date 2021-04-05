@@ -507,7 +507,7 @@ while True:
                             print("Problem in Mercy Check")
                     elif(Check_Type=="CVS"):
                         if(check_cvs(Trigger_Text,Location,URL)):
-                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
+                            df['Ignore_Time'][index]=datetime.now()+timedelta(hours=8)
                     elif(Check_Type=='subpage'):
                         try:
                             if(check_subpage(Trigger_Text, Location, URL)):
