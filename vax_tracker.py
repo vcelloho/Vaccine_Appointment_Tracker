@@ -345,7 +345,7 @@ def count_appointments(Location, URL):
     Lines = file.readlines()
     num_appointments=0
     num_time_slots = 0
-    if("https://www.maimmunizations.org/" in URL):
+    if("maimmunizations.org/" in URL):
         for i in range(len(Lines)):
             if ("appointments available" in Lines[i]):
                 try:
@@ -443,18 +443,22 @@ def read_ma_immunization(SitesFound):
                 Link=""
         for index, row in df2.iterrows():
             print(gettime() + " Checking " + row['Site'])
-            if(row['Num']>= 10 and not row['URL']==''):
+            if(not row['URL']==''):
                 AlreadyFound=False
                 for i in range(0,(int(len(SitesFound)/2)),1):
                     if(SitesFound[i*2]==row['Site']):
                         AlreadyFound=True
                 if(not AlreadyFound):
-                    print(row['Site'])
-                    SitesFound.append(row['Site'])
-                    SitesFound.append(datetime.now()+timedelta(hours=4))
-                    print(gettime() + " Vaccine may be available")
-                    broadcast(str(int(row['Num'])) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
-                    archivehtml(Location, "found vaccine")
+                    get_website(row['URL'],Location+str(index),'maimmunization_reg')
+                    num_appointments=count_appointments(Location+str(index), row['URL'])
+                    if(num_appointments>=10):
+                        print(row['Site'])
+                        SitesFound.append(row['Site'])
+                        SitesFound.append(datetime.now()+timedelta(hours=1))
+                        print(gettime() + " Vaccine may be available")
+                        broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
+                        archivehtml(Location, "found vaccine")
+                        archivehtml(Location+str(index), "found vaccine")
                 else:
                     print("Already Found Ignoring")
         file.close()
