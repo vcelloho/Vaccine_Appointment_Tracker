@@ -190,6 +190,8 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("Clinic does not have any appointment slots available.",Location)):
                     break
+                elif(check_for_text("Please check back later to see if any appointments have become available",Location)):
+                    break
                 elif(check_for_text("Please select a time for your appointment.", Location)):
                     time.sleep(2)
                     break
