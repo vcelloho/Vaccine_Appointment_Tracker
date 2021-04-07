@@ -370,6 +370,25 @@ def count_appointments(Location, URL):
         num_appointments =  -1
     file.close()
     return num_appointments
+def get_vaccine_type(Location):
+    #Location="MA_Immunization5"
+    vaxtype="unknown"
+    file = open(Location+'.html', 'r', encoding='utf-8')
+    Lines = file.readlines()
+    for i in range(len(Lines)):
+        s_line=Lines[i]
+        if('data-pfizer-clinic="true"'  in Lines[i]):
+            vaxtype="Pfizer"
+            pass
+        if('data-moderna-clinic="true"'   in Lines[i]):
+            vaxtype="Moderna"
+            pass
+        if('data-janssen-clinic="true"'  in Lines[i]):
+            vaxtype="Johnson & Johnson"
+            pass        
+    return vaxtype
+        
+        
 def check_cvs(Site,Location,URL):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
@@ -453,12 +472,13 @@ def read_ma_immunization(SitesFound):
                 if(not AlreadyFound):
                     get_website(row['URL'],Location+str(index),'maimmunization_reg')
                     num_appointments=count_appointments(Location+str(index), row['URL'])
+                    vaxtype=get_vaccine_type(Location+str(index))
                     if(num_appointments>=10):
                         print(row['Site'])
                         SitesFound.append(row['Site'])
                         SitesFound.append(datetime.now()+timedelta(hours=1))
                         print(gettime() + " Vaccine may be available")
-                        broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] + "\n" +row['URL']+"\n" + gettime())
+                        broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] + "\n" + vaxtype + "\n" + row['URL']+"\n" + gettime())
                         archivehtml(Location, "found vaccine")
                         archivehtml(Location+str(index), "found vaccine")
                 else:
