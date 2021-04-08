@@ -29,6 +29,7 @@ import os.path
 from os import path
 import glob
 from pathlib import Path
+import urllib
 
 
 
@@ -249,6 +250,21 @@ def check_for_text(Trigger_Text, Location):
             return True
         else:
             return False
+def count_baystate():
+    URL="https://mobileprod.api.baystatehealth.org/workwell/schedules/campaigns?camId=mafirstresp210121&activeOnly=1&includeVac=1&includeSeat=1%27"
+    count=0
+    site=urllib.request.urlopen(URL)
+    lines = site.readlines()
+    s_line=str(lines[0])
+    while(not s_line.find('dose1Available":')==-1):
+        position=s_line.find('dose1Available":')+16
+        s_line=s_line[position:]
+        position=s_line.find(',')
+        s_line2=s_line[0:position]
+        count=int(s_line2)+count
+        s_line=s_line[position:]
+    return count
+
 def check_status(Trigger_Text, Location, URL):  
     #Trigger_Text="Anything"
     #Location="NewTest"
@@ -261,7 +277,10 @@ def check_status(Trigger_Text, Location, URL):
         print(gettime() + " Vaccine may be available")
         num_appointments=count_appointments(Location, URL)
         if(num_appointments >= 0 and num_appointments<10):
-            print(gettime() + " No Appointments")
+            if(Location=="Baystate Health"):
+                broadcast("Vaccine may be available at "+ Location +"\n"+ URL +"\n" + gettime())
+            else:
+                print(gettime() + " No Appointments")
         elif(num_appointments==-1):
             if(Location=="Walgreens"):
                 broadcast("Vaccine may be available at a Walgreens in the Pioneer Valley, check with Walgreens for specific locations"+"\n"+ URL +"\n"+ gettime())
@@ -367,7 +386,13 @@ def count_appointments(Location, URL):
         if(num_time_slots == 0 and num_appointments == 0):
             num_appointments = -1
     else:
-        num_appointments =  -1
+        if(Location=="Baystate Health"):
+            try:
+                num_appointments = count_baystate()
+            except:
+                num_appointments = - 1
+        else:
+            num_appointments =  -1
     file.close()
     return num_appointments
 def get_vaccine_type(Location):
