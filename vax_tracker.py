@@ -134,7 +134,7 @@ def get_website(URL,Location,Check_Type):
     #URL="https://www.walgreens.com/findcare/vaccination/covid-19?ban=covid_vaccine1_landing_schedule"
     #Location="UMass Campus Center"
     #Check_Type="Walgreens"
-    if(str(requests.get(URL))=="<Response [200]>" or str(requests.get(URL))=="<Response [403]>"):
+    if(str(requests.get(URL,verify=False))=="<Response [200]>" or str(requests.get(URL,verify=False))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         maxattempts=30
         ff.get(URL)
