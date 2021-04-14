@@ -616,7 +616,7 @@ while True:
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                         except:
                             print("Problem in subpage checker")
-                    elif(Check_Type=='Vaccine_Spotter'):
+                    elif(Check_Type=='VaccineSpotter'):
                         try:
                             if(check_vaccine_spotter(Trigger_Text)):
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
