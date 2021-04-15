@@ -424,13 +424,13 @@ def get_vaccine_type(Location):
     return vaxtype
         
 def check_vaccine_spotter(Site):
-    #URL="https://www.vaccinespotter.org/MA/?zip=01038&radius=25"
     Location="Vaccine Spotter"
     #Site="Shaw's - 180 A Cambridge Street, Burlington, MA, 01803"
     file = open(Location+'.html', 'r', encoding='utf-8')
     Found=False
     Lines = file.readlines()
     s_line=''
+    URL=''
     step=0
     num_appointments=-1
     for i in range(len(Lines)):
