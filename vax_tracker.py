@@ -15,6 +15,7 @@ Created on Mon Feb 22 13:13:48 2021
   
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 import smtplib
 import random
@@ -114,6 +115,26 @@ def walgreens_special(ff):
         if(button.text=="Search"):
             button.click()
             break  
+def color_special(ff):
+    URL="https://home.color.com/vaccine/register/northampton/vaccination-history"
+    ff = webdriver.Chrome(settings.ChromeDriverPath)
+    ff.get(URL)
+    time.sleep(5)
+    buttons=ff.find_elements_by_tag_name("button")
+    for button in buttons:
+        if(button.text=="Accept All Cookies"):
+            button.click()
+            break
+    radio=ff.find_elements_by_name("receivedPreviousVaccinationOption")
+    #I should be more clever in the future and actually have it check that the button says no
+    radio[1].click()
+    
+    inputElement = ff.find_element_by_id("birthday")
+    inputElement.clear()
+    inputElement.send_keys('01/01/1950')
+    inputElement.send_keys(Keys.ENTER)
+    ff.quit()
+        
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
         if(os.stat(Location+".html").st_size == 0):
@@ -131,9 +152,9 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    #URL="https://www.walgreens.com/findcare/vaccination/covid-19?ban=covid_vaccine1_landing_schedule"
-    #Location="UMass Campus Center"
-    #Check_Type="Walgreens"
+    URL="https://home.color.com/vaccine/register/northampton?calendar=6f6d4aff-a519-4579-b633-7d6a0b5fdc2c"
+    Location="Northampton"
+    Check_Type="Color"
     if(str(requests.get(URL,verify=False))=="<Response [200]>" or str(requests.get(URL,verify=False))=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         maxattempts=30
