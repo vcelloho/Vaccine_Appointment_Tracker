@@ -238,6 +238,9 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("The page you were looking for can't be found.", Location)):
                     break
+                elif(check_for_text("Select Location and Time", Location)):
+                    time.sleep(2)
+                    break
         elif(Location=="Vaccine Spotter"):
             for i in range(0,maxattempts):
                 print(i)
