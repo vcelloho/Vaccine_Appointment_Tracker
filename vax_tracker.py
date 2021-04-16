@@ -15,7 +15,6 @@ Created on Mon Feb 22 13:13:48 2021
   
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 import time
 import smtplib
 import random
