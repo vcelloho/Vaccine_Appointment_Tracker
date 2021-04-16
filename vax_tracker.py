@@ -116,9 +116,6 @@ def walgreens_special(ff):
             button.click()
             break  
 def color_special(ff):
-    URL="https://home.color.com/vaccine/register/northampton/vaccination-history"
-    ff = webdriver.Chrome(settings.ChromeDriverPath)
-    ff.get(URL)
     time.sleep(5)
     buttons=ff.find_elements_by_tag_name("button")
     for button in buttons:
@@ -127,13 +124,11 @@ def color_special(ff):
             break
     radio=ff.find_elements_by_name("receivedPreviousVaccinationOption")
     #I should be more clever in the future and actually have it check that the button says no
-    radio[1].click()
-    
+    radio[1].click()    
     inputElement = ff.find_element_by_id("birthday")
     inputElement.clear()
     inputElement.send_keys('01/01/1950')
     inputElement.send_keys(Keys.ENTER)
-    ff.quit()
         
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
@@ -152,10 +147,16 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    URL="https://home.color.com/vaccine/register/northampton?calendar=6f6d4aff-a519-4579-b633-7d6a0b5fdc2c"
-    Location="Northampton"
-    Check_Type="Color"
-    if(str(requests.get(URL,verify=False))=="<Response [200]>" or str(requests.get(URL,verify=False))=="<Response [403]>"):
+    #URL="https://home.color.com/vaccine/register/northampton/"
+    #Location="Northampton"
+    #Check_Type="Color"
+    if(Check_Type=="Color"):
+        URL=URL+"vaccination-history"
+    try:
+        site_response = str(requests.get(URL))
+    except:
+        site_response = str(requests.get(URL,verify=False))
+    if(site_response=="<Response [200]>" or site_response=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         maxattempts=30
         ff.get(URL)
@@ -227,6 +228,16 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("Appointments available!", Location)):
                     time.sleep(2)
+                    break
+        elif(Check_Type=="Color"):
+            color_special(ff)
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("There are currently no appointments available", Location)):
+                    break
+                elif(check_for_text("The page you were looking for can't be found.", Location)):
                     break
         else:
             if(Location=="Amherst Bangs Center"):
