@@ -248,6 +248,7 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("Appointments available", Location)):
                     time.sleep(2)
+                    break
         else:
             if(Location=="Amherst Bangs Center"):
                 for i in range(0,maxattempts):
@@ -536,7 +537,7 @@ def check_cvs(Site,Location,URL):
 def read_ma_immunization(SitesFound):
     #SitesFound = []
     #SitesIgnore = []
-    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01038&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     Location="MA_Immunization"
     Check_Type="Extra"
     get_website(URL,Location,Check_Type)
