@@ -114,6 +114,21 @@ def walgreens_special(ff):
         if(button.text=="Search"):
             button.click()
             break  
+def color_special(ff):
+    time.sleep(5)
+    buttons=ff.find_elements_by_tag_name("button")
+    for button in buttons:
+        if(button.text=="Accept All Cookies"):
+            button.click()
+            break
+    radio=ff.find_elements_by_name("receivedPreviousVaccinationOption")
+    #I should be more clever in the future and actually have it check that the button says no
+    radio[1].click()    
+    inputElement = ff.find_element_by_id("birthday")
+    inputElement.clear()
+    inputElement.send_keys('01/01/1950')
+    inputElement.send_keys(Keys.ENTER)
+        
 def check_file_valid(Location):
     if(path.exists(Location+".html")):
         if(os.stat(Location+".html").st_size == 0):
@@ -131,10 +146,16 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    #URL="https://www.vaccinespotter.org/MA/?zip=01038&radius=25"
-    #Location="Vaccine Spotter"
-    #Check_Type="VaccineSpotter"
-    if(str(requests.get(URL,verify=False))=="<Response [200]>" or str(requests.get(URL,verify=False))=="<Response [403]>"):
+    #URL="https://home.color.com/vaccine/register/northampton/"
+    #Location="Northampton"
+    #Check_Type="Color"
+    if(Check_Type=="Color"):
+        URL=URL+"vaccination-history"
+    try:
+        site_response = str(requests.get(URL))
+    except:
+        site_response = str(requests.get(URL,verify=False))
+    if(site_response=="<Response [200]>" or site_response=="<Response [403]>"):
         ff = webdriver.Chrome(settings.ChromeDriverPath)
         maxattempts=30
         ff.get(URL)
@@ -206,6 +227,16 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("Appointments available!", Location)):
                     time.sleep(2)
+                    break
+        elif(Check_Type=="Color"):
+            color_special(ff)
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("There are currently no appointments available", Location)):
+                    break
+                elif(check_for_text("The page you were looking for can't be found.", Location)):
                     break
         elif(Location=="Vaccine Spotter"):
             for i in range(0,maxattempts):
@@ -505,7 +536,7 @@ def check_cvs(Site,Location,URL):
 def read_ma_immunization(SitesFound):
     #SitesFound = []
     #SitesIgnore = []
-    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01002&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
+    URL="https://clinics.maimmunizations.org/clinic/search?q%5Bservices_name_in%5D%5B%5D=Vaccination&location=01038&search_radius=25+miles&q%5Bvenue_search_name_or_venue_name_i_cont%5D=&clinic_date_eq%5Byear%5D=&clinic_date_eq%5Bmonth%5D=&clinic_date_eq%5Bday%5D=&q%5Bvaccinations_name_i_cont%5D=&commit=Search#search_results"
     Location="MA_Immunization"
     Check_Type="Extra"
     get_website(URL,Location,Check_Type)
