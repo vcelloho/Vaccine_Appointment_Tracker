@@ -239,6 +239,15 @@ def get_website(URL,Location,Check_Type):
                     break
                 elif(check_for_text("The page you were looking for can't be found.", Location)):
                     break
+        elif(Location=="Vaccine Spotter"):
+            for i in range(0,maxattempts):
+                print(i)
+                time.sleep(1)
+                dump_html(ff,Location)
+                if(check_for_text("No open appointments", Location)):
+                    break
+                elif(check_for_text("Appointments available", Location)):
+                    time.sleep(2)
         else:
             if(Location=="Amherst Bangs Center"):
                 for i in range(0,maxattempts):
@@ -445,7 +454,48 @@ def get_vaccine_type(Location):
             pass        
     return vaxtype
         
-        
+def check_vaccine_spotter(Site):
+    Location="Vaccine Spotter"
+    #Site="Shaw's - 180 A Cambridge Street, Burlington, MA, 01803"
+    file = open(Location+'.html', 'r', encoding='utf-8')
+    Found=False
+    Lines = file.readlines()
+    s_line=''
+    URL=''
+    step=0
+    num_appointments=-1
+    for i in range(len(Lines)):
+        if (step==0 and Site in Lines[i]):
+            s_line=Lines[i]
+            Found=True
+            step=step+1
+        elif(step==1 and 'return false;">View ' in Lines[i]):
+            s_line=Lines[i]
+            position=s_line.find('return false;">View ')+20
+            s_line=s_line[position:]
+            position=s_line.find(' other appointment times')
+            s_line=s_line[0:position]
+            num_appointments=int(s_line)+5
+            step=step+1
+        elif(step>=1 and '<!----> <a href="' in Lines[i]):
+            s_line=Lines[i]
+            position=s_line.find('href="')+6
+            s_line=s_line[position:]
+            position=s_line.find('"')
+            URL=s_line[0:position]
+        elif(step>=1 and 'Last checked' in Lines[i]):
+            break
+    file.close()
+    if(Found):
+        if(num_appointments==-1):
+            broadcast("Vaccine may be available at "+ Site + '\n' + URL +"\n" + gettime())
+        elif(num_appointments>0):
+            broadcast(str(num_appointments) + " appointments may be available at "+ Site + '\n' + URL +"\n" + gettime())
+        archivehtml(Location, "found vaccine")
+        return True
+    else:
+        print(gettime() + " No Appointments")
+        return False
 def check_cvs(Site,Location,URL):
     #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="CVS"
@@ -597,6 +647,12 @@ while True:
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
                         except:
                             print("Problem in subpage checker")
+                    elif(Check_Type=='VaccineSpotter'):
+                        try:
+                            if(check_vaccine_spotter(Trigger_Text)):
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
+                        except:
+                            print("Problem in vaccine spotter checker")
                     else:
                         if(check_status(Trigger_Text,Location,URL)):
                             if(Location=="Walgreens"):
