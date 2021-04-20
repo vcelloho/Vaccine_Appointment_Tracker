@@ -602,8 +602,8 @@ def checksiteignore(SitesFound):
     for i in range(0,(int(listlength/2)),1):
         position=listlength-1-2*i
         if(SitesFound[position]<datetime.now()):
-            SitesFound.pop()
-            SitesFound.pop()
+            SitesFound.pop(position)
+            SitesFound.pop(position-1)
     return SitesFound
         
 def clean_up():
