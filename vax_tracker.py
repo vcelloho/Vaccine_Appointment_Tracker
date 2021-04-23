@@ -586,7 +586,7 @@ def read_ma_immunization(SitesFound):
                     if(num_appointments>=10):
                         print(row['Site'])
                         SitesFound.append(row['Site'])
-                        SitesFound.append(datetime.now()+timedelta(hours=1))
+                        SitesFound.append(datetime.now()+timedelta(hours=3))
                         print(gettime() + " Vaccine may be available")
                         broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] + "\n" + vaxtype + "\n" + row['URL']+"\n" + gettime())
                         archivehtml(Location, "found vaccine")
@@ -638,7 +638,7 @@ while True:
                     if(Check_Type=="Mercy"):
                         try:
                             if(check_status(Trigger_Text,Location,URL)):
-                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=3)
                         except:
                             print("Problem in Mercy Check")
                     elif(Check_Type=="CVS"):
@@ -647,7 +647,7 @@ while True:
                     elif(Check_Type=='subpage'):
                         try:
                             if(check_subpage(Trigger_Text, Location, URL)):
-                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=3)
                         except:
                             print("Problem in subpage checker")
                     elif(Check_Type=='VaccineSpotter'):
@@ -661,7 +661,7 @@ while True:
                             if(Location=="Walgreens"):
                                 df['Ignore_Time'][index]=datetime.now()+timedelta(hours=6)
                             else:
-                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=1)
+                                df['Ignore_Time'][index]=datetime.now()+timedelta(hours=3)
             else:
                 print(Location + " Failed to Download Skipping")
             #time.sleep(random.uniform(0,1))
