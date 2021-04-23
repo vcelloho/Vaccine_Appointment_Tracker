@@ -546,7 +546,7 @@ def read_ma_immunization(SitesFound):
     if(path.exists(Location+".html")):
         file = open(Location+'.html', 'r', encoding='utf-8')
         Lines = file.readlines()
-        columns = ['Site','Num', 'URL','Ignore_Time']
+        columns = ['Site','Location','Num','Vaccine', 'URL','Ignore_Time']
         df2 = pd.DataFrame( columns=columns)
         Link=""
         for i in range(len(Lines)):
@@ -555,6 +555,18 @@ def read_ma_immunization(SitesFound):
                 s_line=s_line.replace('      ','')
                 Loc=s_line.replace('\n','')
                 #print(Location)
+            if(' MA, 0' in Lines[i]):
+                s_line=Lines[i]
+                position=s_line.find(',')+2
+                s_line=s_line[position:]
+                position=s_line.find(',')
+                City=s_line=s_line[0:position]
+            if('Vaccinations offered:' in Lines[i]):
+                s_line=Lines[i+2]
+                position=len(s_line) - len(s_line.lstrip())
+                s_line=s_line[position:]
+                s_line=s_line.replace('\n','')
+                VaccineType=s_line
             if('<strong>Available Appointments:</strong>' in Lines[i]):
                 s_line=Lines[i+1]
                 s_line=s_line.replace(':</strong>','')
@@ -569,7 +581,7 @@ def read_ma_immunization(SitesFound):
                 Link='https://clinics.maimmunizations.org'+s_line
                 #print(s_line)
             if('<div class="map-image mt-4 md:mt-0 md:flex-shrink-0">' in Lines[i]):
-                df2 = df2.append({'Site' : Loc, 'Num' : n_appointment, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
+                df2 = df2.append({'Site' : Loc,'Location' : City, 'Num' : n_appointment,'Vaccine' : VaccineType, 'URL' : Link, 'Ignore_Time' : datetime.now()},  
                     ignore_index = True) 
                 Link=""
         for index, row in df2.iterrows():
@@ -582,13 +594,15 @@ def read_ma_immunization(SitesFound):
                 if(not AlreadyFound):
                     get_website(row['URL'],Location+str(index),'maimmunization_reg')
                     num_appointments=count_appointments(Location+str(index), row['URL'])
-                    vaxtype=get_vaccine_type(Location+str(index))
+                    vaxtype=row['Vaccine']
+                    if(vaxtype==''):
+                        vaxtype=get_vaccine_type(Location+str(index))
                     if(num_appointments>=10):
                         print(row['Site'])
                         SitesFound.append(row['Site'])
                         SitesFound.append(datetime.now()+timedelta(hours=1))
                         print(gettime() + " Vaccine may be available")
-                        broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] + "\n" + vaxtype + "\n" + row['URL']+"\n" + gettime())
+                        broadcast(str(num_appointments) + " appointments may be available at "+ row['Site'] +" in " +row['Location'] + "\n" + vaxtype + "\n" + row['URL']+"\n" + gettime())
                         archivehtml(Location, "found vaccine")
                         archivehtml(Location+str(index), "found vaccine")
                 else:
