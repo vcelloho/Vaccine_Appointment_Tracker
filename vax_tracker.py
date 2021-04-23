@@ -15,6 +15,7 @@ Created on Mon Feb 22 13:13:48 2021
   
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.select import Select
 import time
 import smtplib
 import random
@@ -85,7 +86,14 @@ def archivehtml(Location,arch_type):
     if(arch_type=="found vaccine"):
         copyfile(Location+'.html', 'Vaccine Site Archive/'+getdate() +Location+'.html')
 def cvs_special(ff):
-    ff.find_element_by_link_text("Massachusetts").click()
+    time.sleep(5)
+    sel = Select(ff.find_element_by_id('selectstate'))
+    sel.select_by_visible_text("Massachusetts")
+    buttons=ff.find_elements_by_tag_name("button")
+    for i in range (0,len(buttons)):
+        if(buttons[i].text=="Get started"):
+            buttons[i].click()
+            break
 def mercy_special(ff):
     ff.find_element_by_name("SiteName").click()
     time.sleep(5)
@@ -146,9 +154,9 @@ def dump_html(browser,Location):
         f.close()
 
 def get_website(URL,Location,Check_Type):
-    #URL="https://home.color.com/vaccine/register/northampton/"
+    #URL="https://www.cvs.com/immunizations/covid-19-vaccine"
     #Location="Northampton"
-    #Check_Type="Color"
+    #Check_Type="CVS"
     if(Check_Type=="Color"):
         URL=URL+"vaccination-history"
     try:
